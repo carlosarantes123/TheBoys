@@ -1,101 +1,106 @@
-# Vue 3 + TypeScript + Vite
+# TheBoys · Gerenciador de Tarefas Acadêmicas
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Projeto em equipe da disciplina **Desenvolvimento Frontend — 2026.2**: uma aplicação para organizar as tarefas dos projetos acadêmicos, com lista de tarefas, páginas de projeto e, nos próximos marcos, cadastro, edição, filtros e visão de quadro.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Equipe TheBoys
 
+| Integrante | GitHub |
+| --- | --- |
+| Carlos Eduardo Arantes | [@carlosarantes123](https://github.com/carlosarantes123) |
+| Igor Evangelista Cruz | [@igorCruz23](https://github.com/igorCruz23) |
+| Heitor Mota da Cruz | [@heitorcruz-tech](https://github.com/heitorcruz-tech) |
+| João Vitor Fernandes | — |
 
-### 1. Inicie a API local
+## Framework e tecnologias
 
-Em um terminal, execute:
+- **Vue 3** com **TypeScript**, criado com o **Vite** (`npm create vite@latest`, template `vue-ts`)
+- **Vue Router** para as rotas
+- **json-server** como API local, a partir do `db.json`
+
+## Como rodar o projeto
+
+Pré-requisito: **Node.js 24 ou superior** (`node -v`).
 
 ```bash
-npx json-server db.json --port 3000
+git clone https://github.com/carlosarantes123/TheBoys.git
+cd TheBoys
+npm install
 ```
 
-A API ficará disponível em `http://localhost:3000`.
-
-### 2. Inicie o frontend
-
-Em outro terminal, execute:
+Depois, em **dois terminais** na raiz do projeto:
 
 ```bash
+# terminal 1 — API local em http://localhost:3000
+npx json-server db.json
+```
+
+```bash
+# terminal 2 — aplicação em http://localhost:5173
 npm run dev
 ```
 
-Abra no navegador o endereço exibido pelo Vite, normalmente `http://localhost:5173`.
+Para voltar aos dados originais, copie o `db.seed.json` por cima do `db.json`.
+
+## Rotas da aplicação
+
+| Rota | Tela |
+| --- | --- |
+| `/` | Lista de todas as tarefas |
+| `/tarefas/:id` | Detalhe de uma tarefa |
+| `/projetos` | Lista de projetos |
+| `/projetos/:id` | Página do projeto, com as tarefas dele |
+| qualquer outra | Página não encontrada |
 
 ## API local
 
-O arquivo `db.json` funciona como banco de dados da aplicação e expõe os seguintes recursos:
+O `json-server` transforma cada chave do `db.json` em uma rota:
 
 | Método | Rota | Descrição |
 | --- | --- | --- |
-| `GET` | `/projetos` | Lista os projetos |
-| `GET` | `/projetos/:id` | Retorna um projeto |
-| `POST` | `/projetos` | Cria um projeto |
 | `GET` | `/tarefas` | Lista as tarefas |
 | `GET` | `/tarefas/:id` | Retorna uma tarefa |
-| `POST` | `/tarefas` | Cria uma tarefa |
-| `PATCH` | `/tarefas/:id` | Atualiza parte de uma tarefa |
-| `DELETE` | `/tarefas/:id` | Remove uma tarefa |
+| `GET` | `/projetos` | Lista os projetos |
+| `GET` | `/projetos/:id?_embed=tarefas` | Retorna um projeto com as tarefas dele |
 
-Para listar apenas as tarefas de um projeto, use o filtro `projetoId`:
+> **Atenção:** `GET /tarefas?projetoId=1` volta vazio, porque o json-server lê o `1` da URL como número e no `db.json` o `projetoId` é o texto `"1"`. Para as tarefas de um projeto, use o `_embed`.
 
-```text
-GET http://localhost:3000/tarefas?projetoId=1
-```
+## Contrato de dados
 
-O arquivo `db.seed.json` preserva uma cópia dos dados iniciais e pode ser usado para restaurar o conteúdo de `db.json` durante o desenvolvimento.
+O formato de projetos e tarefas é o mesmo para toda a turma e não deve ser alterado:
 
-## Modelo de dados
+- `db.json` — os dados; `db.seed.json` — cópia intacta para recomeçar do zero
+- `src/tipos.ts` — os tipos `Projeto`, `Tarefa`, `NovaTarefa`, `Status` e `Prioridade`
 
-Cada projeto possui nome, descrição, disciplina e data de criação. As tarefas são associadas a um projeto por `projetoId` e incluem título, descrição, responsável, prazo, prioridade e status.
-
-Status aceitos:
-
-- `a-fazer`;
-- `em-andamento`;
-- `em-revisao`;
-- `concluida`.
-
-Prioridades aceitas: `baixa`, `media` e `alta`.
-
-Os contratos TypeScript correspondentes estão definidos em `src/tipos.ts`.
+Status aceitos: `a-fazer`, `em-andamento`, `em-revisao`, `concluida`.
+Prioridades aceitas: `baixa`, `media`, `alta`.
 
 ## Scripts
 
 | Comando | Descrição |
 | --- | --- |
 | `npm run dev` | Inicia o servidor de desenvolvimento |
-| `npm run build` | Valida os tipos e gera a versão de produção em `dist/` |
-| `npm run preview` | Executa localmente a versão gerada pelo build |
+| `npm run build` | Confere os tipos e gera a versão de produção em `dist/` |
+| `npm run preview` | Serve localmente a versão gerada pelo build |
 
 ## Estrutura do projeto
 
 ```text
 .
-├── public/             # Arquivos estáticos
+├── db.json               # Dados da API local
+├── db.seed.json          # Cópia intacta dos dados iniciais
 ├── src/
-│   ├── assets/         # Imagens e recursos visuais
-│   ├── components/     # Componentes Vue
-│   ├── App.vue         # Componente raiz
-│   ├── main.ts         # Ponto de entrada da aplicação
-│   ├── style.css       # Estilos globais
-│   └── tipos.ts        # Tipos do domínio
-├── db.json            # Dados utilizados pela API local
-├── db.seed.json       # Cópia dos dados iniciais
-├── package.json       # Dependências e scripts
-└── vite.config.ts     # Configuração do Vite
+│   ├── api.ts            # Funções tipadas de acesso à API
+│   ├── router.ts         # Rotas da aplicação
+│   ├── rotulos.ts        # Textos de status/prioridade e formatação de datas
+│   ├── tipos.ts          # Contrato de dados
+│   ├── App.vue           # Layout base: cabeçalho e navegação
+│   ├── components/
+│   │   ├── CartaoTarefa.vue   # Cartão de uma tarefa
+│   │   └── CarregaDados.vue   # Estados de carregando, erro e não encontrado
+│   └── views/            # Telas ligadas às rotas
+└── package.json
 ```
 
-## Fluxo de desenvolvimento
+## Organização da equipe
 
-1. Crie uma branch para a sua tarefa.
-2. Faça alterações pequenas e focadas.
-3. Execute `npm run build` antes de enviar as mudanças.
-4. Abra um pull request descrevendo o que foi implementado e como testar.
-
-## Licença
-
-Este repositório ainda não possui uma licença definida.
+As tarefas estão no [quadro do GitHub Projects](https://github.com/users/carlosarantes123/projects/1), com um milestone por marco e cada issue com responsável. Cada integrante trabalha em uma branch e abre um pull request para a `main`.
