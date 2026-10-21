@@ -46,7 +46,10 @@ Para voltar aos dados originais, copie o `db.seed.json` por cima do `db.json`.
 | Rota | Tela |
 | --- | --- |
 | `/` | Lista de todas as tarefas |
+| `/quadro` | Quadro Kanban, com resumo e busca |
+| `/tarefas/nova` | Cadastro de tarefa |
 | `/tarefas/:id` | Detalhe de uma tarefa |
+| `/tarefas/:id/editar` | Edição de uma tarefa |
 | `/projetos` | Lista de projetos |
 | `/projetos/:id` | Página do projeto, com as tarefas dele |
 | qualquer outra | Página não encontrada |
@@ -59,6 +62,8 @@ O `json-server` transforma cada chave do `db.json` em uma rota:
 | --- | --- | --- |
 | `GET` | `/tarefas` | Lista as tarefas |
 | `GET` | `/tarefas/:id` | Retorna uma tarefa |
+| `POST` | `/tarefas` | Cadastra uma tarefa |
+| `PUT` | `/tarefas/:id` | Atualiza uma tarefa |
 | `GET` | `/projetos` | Lista os projetos |
 | `GET` | `/projetos/:id?_embed=tarefas` | Retorna um projeto com as tarefas dele |
 
@@ -93,10 +98,11 @@ Prioridades aceitas: `baixa`, `media`, `alta`.
 │   ├── router.ts         # Rotas da aplicação
 │   ├── rotulos.ts        # Textos de status/prioridade e formatação de datas
 │   ├── tipos.ts          # Contrato de dados
-│   ├── App.vue           # Layout base: cabeçalho e navegação
+│   ├── App.vue           # Layout base: menu lateral, barra superior e rotas
 │   ├── components/
 │   │   ├── CartaoTarefa.vue   # Cartão de uma tarefa
-│   │   └── CarregaDados.vue   # Estados de carregando, erro e não encontrado
+│   │   ├── CarregaDados.vue   # Estados de carregando, erro e não encontrado
+│   │   └── FormularioTarefa.vue # Formulário de tarefa, usado para criar e editar
 │   └── views/            # Telas ligadas às rotas
 └── package.json
 ```
