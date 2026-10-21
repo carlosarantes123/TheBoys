@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import type { NovaTarefa, Projeto, Status, Tarefa } from './tipos'
@@ -30,6 +29,26 @@ const formulario = reactive<NovaTarefa>({
   responsavel: '',
   prazo: '',
 })
+
+const erros = reactive({
+  titulo: '',
+  projetoId: '',
+  responsavel: '',
+  prazo: '',
+})
+
+function limparErros() {
+  Object.assign(erros, { titulo: '', projetoId: '', responsavel: '', prazo: '' })
+}
+
+function validar() {
+  erros.titulo = formulario.titulo.trim() ? '' : 'Informe o título da tarefa.'
+  erros.projetoId = formulario.projetoId ? '' : 'Selecione um projeto.'
+  erros.responsavel = formulario.responsavel.trim() ? '' : 'Informe o responsável.'
+  erros.prazo = formulario.prazo ? '' : 'Informe o prazo.'
+
+  return !Object.values(erros).some(Boolean)
+}
 
 const tarefasFiltradas = computed(() => {
   const termo = busca.value.trim().toLowerCase()
@@ -100,6 +119,7 @@ function abrirFormulario() {
   formulario.status = 'a-fazer'
   formulario.prioridade = 'media'
   formulario.projetoId = projetos.value[0]?.id ?? ''
+  limparErros()
 
   tela.value = 'nova-tarefa'
 }
@@ -108,15 +128,7 @@ async function salvarTarefa() {
   erro.value = ''
   mensagem.value = ''
 
-  if (
-    !formulario.projetoId ||
-    !formulario.titulo.trim() ||
-    !formulario.responsavel.trim() ||
-    !formulario.prazo
-  ) {
-    erro.value = 'Preencha o título, o projeto, o responsável e o prazo.'
-    return
-  }
+  if (!validar()) return
 
   salvando.value = true
 
@@ -355,7 +367,7 @@ onMounted(carregarDados)
 
           <p v-if="erro" class="notice error" role="alert">{{ erro }}</p>
 
-          <form class="task-form" @submit.prevent="salvarTarefa">
+          <form class="task-form" novalidate @submit.prevent="salvarTarefa">
             <div class="form-section-title">
               <span class="form-section-icon">✎</span>
               <div>
@@ -373,7 +385,10 @@ onMounted(carregarDados)
                 maxlength="120"
                 placeholder="Ex.: Desenvolver a tela de login"
                 required
+                :aria-invalid="!!erros.titulo"
+                aria-describedby="erro-titulo"
               />
+              <small v-if="erros.titulo" id="erro-titulo">{{ erros.titulo }}</small>
             </div>
 
             <div class="form-field">
@@ -388,7 +403,13 @@ onMounted(carregarDados)
 
             <div class="form-field">
               <label for="projeto">Projeto <span>*</span></label>
-              <select id="projeto" v-model="formulario.projetoId" required>
+              <select
+                id="projeto"
+                v-model="formulario.projetoId"
+                required
+                :aria-invalid="!!erros.projetoId"
+                aria-describedby="erro-projeto"
+              >
                 <option value="" disabled>Selecione um projeto</option>
                 <option
                   v-for="projeto in projetos"
@@ -401,6 +422,9 @@ onMounted(carregarDados)
               <small v-if="projetos.length === 0">
                 Nenhum projeto encontrado. Confira a API.
               </small>
+              <small v-if="erros.projetoId" id="erro-projeto">
+                {{ erros.projetoId }}
+              </small>
             </div>
 
             <div class="form-row">
@@ -412,7 +436,12 @@ onMounted(carregarDados)
                   type="text"
                   placeholder="Nome do responsável"
                   required
+                  :aria-invalid="!!erros.responsavel"
+                  aria-describedby="erro-responsavel"
                 />
+                <small v-if="erros.responsavel" id="erro-responsavel">
+                  {{ erros.responsavel }}
+                </small>
               </div>
 
               <div class="form-field">
@@ -422,7 +451,10 @@ onMounted(carregarDados)
                   v-model="formulario.prazo"
                   type="date"
                   required
+                  :aria-invalid="!!erros.prazo"
+                  aria-describedby="erro-prazo"
                 />
+                <small v-if="erros.prazo" id="erro-prazo">{{ erros.prazo }}</small>
               </div>
             </div>
 
