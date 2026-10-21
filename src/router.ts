@@ -6,6 +6,8 @@ import EditarTarefa from './views/EditarTarefa.vue'
 import DetalheTarefa from './views/DetalheTarefa.vue'
 import ListaProjetos from './views/ListaProjetos.vue'
 import PaginaProjeto from './views/PaginaProjeto.vue'
+import NovoProjeto from './views/NovoProjeto.vue'
+import EditarProjeto from './views/EditarProjeto.vue'
 import NaoEncontrada from './views/NaoEncontrada.vue'
 
 export default createRouter({
@@ -17,7 +19,9 @@ export default createRouter({
     { path: '/tarefas/:id', component: DetalheTarefa, meta: { titulo: 'Tarefa' } },
     { path: '/tarefas/:id/editar', component: EditarTarefa, meta: { titulo: 'Editar tarefa' } },
     { path: '/projetos', component: ListaProjetos, meta: { titulo: 'Projetos' } },
+    { path: '/projetos/novo', component: NovoProjeto, meta: { titulo: 'Novo projeto' } },
     { path: '/projetos/:id', component: PaginaProjeto, meta: { titulo: 'Projeto' } },
+    { path: '/projetos/:id/editar', component: EditarProjeto, meta: { titulo: 'Editar projeto' } },
     { path: '/:rota(.*)*', component: NaoEncontrada, meta: { titulo: 'Não encontrada' } },
   ],
 })

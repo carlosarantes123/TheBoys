@@ -20,6 +20,7 @@ function enviarJson<T>(caminho: string, metodo: 'POST' | 'PUT', dados: unknown):
 }
 
 export type ProjetoComTarefas = Projeto & { tarefas: Tarefa[] }
+export type NovoProjeto = Omit<Projeto, 'id'>
 
 export const listarTarefas = () => buscar<Tarefa[]>('/tarefas')
 export const buscarTarefa = (id: string) => buscar<Tarefa>(`/tarefas/${encodeURIComponent(id)}`)
@@ -29,6 +30,10 @@ export const atualizarTarefa = (id: string, dados: NovaTarefa) =>
 export const listarProjetos = () => buscar<Projeto[]>('/projetos')
 export const buscarProjeto = (id: string) =>
   buscar<Projeto>(`/projetos/${encodeURIComponent(id)}`)
+export const criarProjeto = (dados: NovoProjeto) =>
+  enviarJson<Projeto>('/projetos', 'POST', dados)
+export const atualizarProjeto = (id: string, dados: NovoProjeto) =>
+  enviarJson<Projeto>(`/projetos/${encodeURIComponent(id)}`, 'PUT', dados)
 // O filtro ?projetoId= não funciona no json-server para ids numéricos; usa-se _embed.
 export const buscarProjetoComTarefas = (id: string) =>
   buscar<ProjetoComTarefas>(`/projetos/${encodeURIComponent(id)}?_embed=tarefas`)
