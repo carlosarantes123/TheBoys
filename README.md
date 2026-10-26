@@ -9,7 +9,7 @@ Projeto em equipe da disciplina **Desenvolvimento Frontend — 2026.2**: uma apl
 | Carlos Eduardo Arantes | [@carlosarantes123](https://github.com/carlosarantes123) |
 | Igor Evangelista Cruz | [@igorCruz23](https://github.com/igorCruz23) |
 | Heitor Mota da Cruz | [@heitorcruz-tech](https://github.com/heitorcruz-tech) |
-| João Vitor Fernandes | — |
+| João Vitor Fernandes | — [@jvfernandessilva06-hash](https://github.com/jvfernandessilva06-hash)|
 
 ## Framework e tecnologias
 

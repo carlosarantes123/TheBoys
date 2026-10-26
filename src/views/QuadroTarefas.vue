@@ -1,26 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { listarProjetos, listarTarefas } from '../api'
+import AlternarVisao from '../components/AlternarVisao.vue'
 import CarregaDados from '../components/CarregaDados.vue'
+import { filtrarTarefas, filtros } from '../filtros'
 import { formatarData, rotuloPrioridade, rotuloStatus } from '../rotulos'
 import type { Projeto, Status, Tarefa } from '../tipos'
 
 const colunas = Object.entries(rotuloStatus) as [Status, string][]
-const busca = ref('')
 
 const carregar = async () => {
   const [tarefas, projetos] = await Promise.all([listarTarefas(), listarProjetos()])
   return { tarefas, projetos }
-}
-
-function filtrar(tarefas: Tarefa[]) {
-  const termo = busca.value.trim().toLowerCase()
-  if (!termo) return tarefas
-  return tarefas.filter((tarefa) =>
-    [tarefa.titulo, tarefa.descricao, tarefa.responsavel].some((campo) =>
-      campo.toLowerCase().includes(termo),
-    ),
-  )
 }
 
 function nomeProjeto(projetos: Projeto[], projetoId: string) {
@@ -41,6 +31,8 @@ function contar(tarefas: Tarefa[], status: Status) {
     </div>
     <RouterLink class="primary-button" to="/tarefas/nova">＋ Criar tarefa</RouterLink>
   </div>
+
+  <AlternarVisao />
 
   <CarregaDados :carregar="carregar" v-slot="{ dados: { tarefas, projetos } }">
     <div class="summary-grid">
@@ -70,11 +62,11 @@ function contar(tarefas: Tarefa[], status: Status) {
     <div class="board-toolbar">
       <div>
         <h2>Quadro de tarefas</h2>
-        <span class="task-total">{{ filtrar(tarefas).length }} tarefas</span>
+        <span class="task-total">{{ filtrarTarefas(tarefas).length }} tarefas</span>
       </div>
       <label class="search-box">
         <span>⌕</span>
-        <input v-model="busca" type="search" placeholder="Buscar tarefa..." aria-label="Buscar tarefas" />
+        <input v-model="filtros.busca" type="search" placeholder="Buscar tarefa..." aria-label="Buscar tarefas" />
       </label>
     </div>
 
@@ -83,12 +75,12 @@ function contar(tarefas: Tarefa[], status: Status) {
         <header class="column-header">
           <span class="column-dot" :class="status"></span>
           <h3>{{ nome }}</h3>
-          <span class="column-count">{{ contar(filtrar(tarefas), status) }}</span>
+          <span class="column-count">{{ contar(filtrarTarefas(tarefas), status) }}</span>
         </header>
 
         <div class="column-cards">
           <article
-            v-for="tarefa in filtrar(tarefas).filter((t) => t.status === status)"
+            v-for="tarefa in filtrarTarefas(tarefas).filter((t) => t.status === status)"
             :key="tarefa.id"
             class="task-card"
           >
@@ -110,7 +102,7 @@ function contar(tarefas: Tarefa[], status: Status) {
             </div>
           </article>
 
-          <div v-if="contar(filtrar(tarefas), status) === 0" class="empty-column">
+          <div v-if="contar(filtrarTarefas(tarefas), status) === 0" class="empty-column">
             <span>◇</span>
             <p>Nenhuma tarefa</p>
           </div>
