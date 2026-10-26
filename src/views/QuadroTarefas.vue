@@ -2,6 +2,7 @@
 import { listarProjetos, listarTarefas } from '../api'
 import AlternarVisao from '../components/AlternarVisao.vue'
 import CarregaDados from '../components/CarregaDados.vue'
+import SeletorStatus from '../components/SeletorStatus.vue'
 import { filtrarTarefas, filtros } from '../filtros'
 import { formatarData, rotuloPrioridade, rotuloStatus } from '../rotulos'
 import type { Projeto, Status, Tarefa } from '../tipos'
@@ -95,6 +96,7 @@ function contar(tarefas: Tarefa[], status: Status) {
                 {{ rotuloPrioridade[tarefa.prioridade] }}
               </span>
             </div>
+            <SeletorStatus :tarefa="tarefa" />
             <div class="task-card-footer">
               <span class="assignee-avatar">{{ tarefa.responsavel.slice(0, 1).toUpperCase() }}</span>
               <span class="assignee-name">{{ tarefa.responsavel }}</span>

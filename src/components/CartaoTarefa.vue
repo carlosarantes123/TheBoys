@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Tarefa } from '../tipos'
 import { formatarData, rotuloPrioridade, rotuloStatus } from '../rotulos'
+import SeletorStatus from './SeletorStatus.vue'
 
 defineProps<{ tarefa: Tarefa }>()
 </script>
@@ -18,5 +19,6 @@ defineProps<{ tarefa: Tarefa }>()
     </p>
     <p>Responsável: {{ tarefa.responsavel }}</p>
     <p>Prazo: {{ formatarData(tarefa.prazo) }}</p>
+    <SeletorStatus :tarefa="tarefa" />
   </article>
 </template>

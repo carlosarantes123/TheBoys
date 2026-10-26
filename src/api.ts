@@ -1,4 +1,4 @@
-import type { NovaTarefa, Projeto, Tarefa } from './tipos'
+import type { NovaTarefa, Projeto, Status, Tarefa } from './tipos'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
@@ -11,7 +11,7 @@ async function buscar<T>(caminho: string, opcoes?: RequestInit): Promise<T> {
   return resposta.json() as Promise<T>
 }
 
-function enviarJson<T>(caminho: string, metodo: 'POST' | 'PUT', dados: unknown): Promise<T> {
+function enviarJson<T>(caminho: string, metodo: 'POST' | 'PUT' | 'PATCH', dados: unknown): Promise<T> {
   return buscar<T>(caminho, {
     method: metodo,
     headers: { 'Content-Type': 'application/json' },
@@ -26,6 +26,9 @@ export const buscarTarefa = (id: string) => buscar<Tarefa>(`/tarefas/${encodeURI
 export const criarTarefa = (dados: NovaTarefa) => enviarJson<Tarefa>('/tarefas', 'POST', dados)
 export const atualizarTarefa = (id: string, dados: NovaTarefa) =>
   enviarJson<Tarefa>(`/tarefas/${encodeURIComponent(id)}`, 'PUT', dados)
+// Atualiza só o status (PATCH), sem reenviar a tarefa inteira.
+export const atualizarStatusTarefa = (id: string, status: Status) =>
+  enviarJson<Tarefa>(`/tarefas/${encodeURIComponent(id)}`, 'PATCH', { status })
 export const listarProjetos = () => buscar<Projeto[]>('/projetos')
 export const buscarProjeto = (id: string) =>
   buscar<Projeto>(`/projetos/${encodeURIComponent(id)}`)
