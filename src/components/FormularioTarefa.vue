@@ -1,19 +1,22 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, useTemplateRef } from 'vue'
 import { listarProjetos } from '../api'
 import CarregaDados from './CarregaDados.vue'
+import { focarPrimeiroErro } from '../foco'
 import { rotuloPrioridade, rotuloStatus } from '../rotulos'
 import type { NovaTarefa, Prioridade, Status, Tarefa } from '../tipos'
 
 // Sem `tarefa` o formulário cadastra; com `tarefa` ele edita.
-const props = defineProps<{ tarefa?: Tarefa; enviando?: boolean }>()
+const props = defineProps<{ tarefa?: Tarefa; enviando?: boolean; projetoIdInicial?: string }>()
 const emit = defineEmits<{ salvar: [dados: NovaTarefa]; cancelar: [] }>()
+
+const formulario = useTemplateRef<HTMLFormElement>('formulario')
 
 const opcoesStatus = Object.entries(rotuloStatus) as [Status, string][]
 const opcoesPrioridade = Object.entries(rotuloPrioridade) as [Prioridade, string][]
 
 const form = reactive<NovaTarefa>({
-  projetoId: props.tarefa?.projetoId ?? '',
+  projetoId: props.tarefa?.projetoId ?? props.projetoIdInicial ?? '',
   titulo: props.tarefa?.titulo ?? '',
   descricao: props.tarefa?.descricao ?? '',
   status: props.tarefa?.status ?? 'a-fazer',
@@ -33,7 +36,10 @@ function validar() {
 }
 
 function enviar() {
-  if (!validar()) return
+  if (!validar()) {
+    focarPrimeiroErro(formulario.value)
+    return
+  }
   emit('salvar', {
     ...form,
     titulo: form.titulo.trim(),
@@ -45,9 +51,9 @@ function enviar() {
 
 <template>
   <CarregaDados :carregar="listarProjetos" v-slot="{ dados: projetos }">
-    <form class="task-form" novalidate @submit.prevent="enviar">
+    <form ref="formulario" class="task-form" novalidate @submit.prevent="enviar">
       <div class="form-section-title">
-        <span class="form-section-icon">✎</span>
+        <span class="form-section-icon" aria-hidden="true">✎</span>
         <div>
           <h2>Informações da tarefa</h2>
           <p>Descreva o que precisa ser realizado.</p>
@@ -55,7 +61,7 @@ function enviar() {
       </div>
 
       <div class="form-field">
-        <label for="titulo">Título da tarefa <span>*</span></label>
+        <label for="titulo">Título da tarefa <span aria-hidden="true">*</span></label>
         <input
           id="titulo"
           v-model="form.titulo"
@@ -64,9 +70,9 @@ function enviar() {
           placeholder="Ex.: Desenvolver a tela de login"
           required
           :aria-invalid="!!erros.titulo"
-          aria-describedby="erro-titulo"
+          :aria-describedby="erros.titulo ? 'erro-titulo' : undefined"
         />
-        <small v-if="erros.titulo" id="erro-titulo">{{ erros.titulo }}</small>
+        <small v-if="erros.titulo" id="erro-titulo" class="field-error">⚠ Erro: {{ erros.titulo }}</small>
       </div>
 
       <div class="form-field">
@@ -80,13 +86,13 @@ function enviar() {
       </div>
 
       <div class="form-field">
-        <label for="projeto">Projeto <span>*</span></label>
+        <label for="projeto">Projeto <span aria-hidden="true">*</span></label>
         <select
           id="projeto"
           v-model="form.projetoId"
           required
           :aria-invalid="!!erros.projetoId"
-          aria-describedby="erro-projeto"
+          :aria-describedby="erros.projetoId ? 'erro-projeto' : undefined"
         >
           <option value="" disabled>Selecione um projeto</option>
           <option v-for="projeto in projetos" :key="projeto.id" :value="projeto.id">
@@ -94,12 +100,12 @@ function enviar() {
           </option>
         </select>
         <small v-if="projetos.length === 0">Nenhum projeto encontrado. Confira a API.</small>
-        <small v-if="erros.projetoId" id="erro-projeto">{{ erros.projetoId }}</small>
+        <small v-if="erros.projetoId" id="erro-projeto" class="field-error">⚠ Erro: {{ erros.projetoId }}</small>
       </div>
 
       <div class="form-row">
         <div class="form-field">
-          <label for="responsavel">Responsável <span>*</span></label>
+          <label for="responsavel">Responsável <span aria-hidden="true">*</span></label>
           <input
             id="responsavel"
             v-model="form.responsavel"
@@ -107,22 +113,22 @@ function enviar() {
             placeholder="Nome do responsável"
             required
             :aria-invalid="!!erros.responsavel"
-            aria-describedby="erro-responsavel"
+            :aria-describedby="erros.responsavel ? 'erro-responsavel' : undefined"
           />
-          <small v-if="erros.responsavel" id="erro-responsavel">{{ erros.responsavel }}</small>
+          <small v-if="erros.responsavel" id="erro-responsavel" class="field-error">⚠ Erro: {{ erros.responsavel }}</small>
         </div>
 
         <div class="form-field">
-          <label for="prazo">Prazo <span>*</span></label>
+          <label for="prazo">Prazo <span aria-hidden="true">*</span></label>
           <input
             id="prazo"
             v-model="form.prazo"
             type="date"
             required
             :aria-invalid="!!erros.prazo"
-            aria-describedby="erro-prazo"
+            :aria-describedby="erros.prazo ? 'erro-prazo' : undefined"
           />
-          <small v-if="erros.prazo" id="erro-prazo">{{ erros.prazo }}</small>
+          <small v-if="erros.prazo" id="erro-prazo" class="field-error">⚠ Erro: {{ erros.prazo }}</small>
         </div>
       </div>
 

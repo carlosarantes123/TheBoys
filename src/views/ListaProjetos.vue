@@ -7,6 +7,9 @@ import { formatarData } from '../rotulos'
 
 <template>
   <h1>Projetos</h1>
+  <p class="acoes">
+    <RouterLink class="primary-button" to="/projetos/novo">＋ Novo projeto</RouterLink>
+  </p>
   <CarregaDados :carregar="listarProjetos" v-slot="{ dados }">
     <div class="board-toolbar">
       <div>
