@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { listarProjetos, listarTarefas } from '../api'
 import CarregaDados from '../components/CarregaDados.vue'
+import FiltrosTarefas from '../components/FiltrosTarefas.vue'
 import CartaoTarefa from '../components/CartaoTarefa.vue'
-import { filtrarProjetos, filtrarTarefas, filtros, temBusca } from '../filtros'
+import { filtrarProjetos, filtrarTarefas, filtros, temBusca, temFiltros } from '../filtros'
 import { formatarData } from '../rotulos'
 
 const carregar = async () => {
@@ -23,9 +24,11 @@ const carregar = async () => {
           <span class="task-total">{{ filtrarTarefas(tarefas).length }} tarefas</span>
           <span class="task-total">{{ filtrarProjetos(projetos).length }} projetos</span>
         </div>
+        <FiltrosTarefas />
       </div>
 
       <h2>Projetos</h2>
+      <p v-if="temFiltros()" class="aviso-filtros">Os filtros de status e prioridade valem só para as tarefas.</p>
       <p v-if="filtrarProjetos(projetos).length === 0">Nenhum projeto encontrado para “{{ filtros.busca.trim() }}”.</p>
       <div class="grade">
         <article v-for="projeto in filtrarProjetos(projetos)" :key="projeto.id" class="cartao">
@@ -37,7 +40,7 @@ const carregar = async () => {
       </div>
 
       <h2>Tarefas</h2>
-      <p v-if="filtrarTarefas(tarefas).length === 0">Nenhuma tarefa encontrada para “{{ filtros.busca.trim() }}”.</p>
+      <p v-if="filtrarTarefas(tarefas).length === 0">Nenhuma tarefa encontrada<template v-if="temBusca()"> para “{{ filtros.busca.trim() }}”</template><template v-if="temFiltros()"> com os filtros escolhidos</template>.</p>
       <div class="grade">
         <CartaoTarefa v-for="tarefa in filtrarTarefas(tarefas)" :key="tarefa.id" :tarefa="tarefa" />
       </div>

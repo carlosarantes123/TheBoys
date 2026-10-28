@@ -2,6 +2,7 @@
 import { listarProjetos, listarTarefas } from '../api'
 import AlternarVisao from '../components/AlternarVisao.vue'
 import CarregaDados from '../components/CarregaDados.vue'
+import FiltrosTarefas from '../components/FiltrosTarefas.vue'
 import SeletorStatus from '../components/SeletorStatus.vue'
 import { filtrarTarefas, filtros } from '../filtros'
 import { formatarData, rotuloPrioridade, rotuloStatus } from '../rotulos'
@@ -65,10 +66,13 @@ function contar(tarefas: Tarefa[], status: Status) {
         <h2>Quadro de tarefas</h2>
         <span class="task-total">{{ filtrarTarefas(tarefas).length }} tarefas</span>
       </div>
-      <label class="search-box">
-        <span>⌕</span>
-        <input v-model="filtros.busca" type="search" placeholder="Buscar por título..." aria-label="Buscar tarefas por título" />
-      </label>
+      <div>
+        <FiltrosTarefas />
+        <label class="search-box">
+          <span>⌕</span>
+          <input v-model="filtros.busca" type="search" placeholder="Buscar por título..." aria-label="Buscar tarefas por título" />
+        </label>
+      </div>
     </div>
 
     <div class="kanban-board">

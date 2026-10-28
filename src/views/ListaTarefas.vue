@@ -2,8 +2,9 @@
 import { listarTarefas } from '../api'
 import AlternarVisao from '../components/AlternarVisao.vue'
 import CarregaDados from '../components/CarregaDados.vue'
+import FiltrosTarefas from '../components/FiltrosTarefas.vue'
 import CartaoTarefa from '../components/CartaoTarefa.vue'
-import { filtrarTarefas, filtros } from '../filtros'
+import { filtrarTarefas, filtros, temBusca, temFiltros } from '../filtros'
 </script>
 
 <template>
@@ -15,14 +16,17 @@ import { filtrarTarefas, filtros } from '../filtros'
       <div>
         <span class="task-total">{{ filtrarTarefas(dados).length }} tarefas</span>
       </div>
-      <label class="search-box">
-        <span>⌕</span>
-        <input v-model="filtros.busca" type="search" placeholder="Buscar por título..." aria-label="Buscar tarefas por título" />
-      </label>
+      <div>
+        <FiltrosTarefas />
+        <label class="search-box">
+          <span>⌕</span>
+          <input v-model="filtros.busca" type="search" placeholder="Buscar por título..." aria-label="Buscar tarefas por título" />
+        </label>
+      </div>
     </div>
 
     <p v-if="dados.length === 0">Nenhuma tarefa cadastrada.</p>
-    <p v-else-if="filtrarTarefas(dados).length === 0">Nenhuma tarefa encontrada para “{{ filtros.busca.trim() }}”.</p>
+    <p v-else-if="filtrarTarefas(dados).length === 0">Nenhuma tarefa encontrada<template v-if="temBusca()"> para “{{ filtros.busca.trim() }}”</template><template v-if="temFiltros()"> com os filtros escolhidos</template>.</p>
     <div class="grade">
       <CartaoTarefa v-for="tarefa in filtrarTarefas(dados)" :key="tarefa.id" :tarefa="tarefa" />
     </div>

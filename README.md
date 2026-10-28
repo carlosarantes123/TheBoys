@@ -52,7 +52,7 @@ Para voltar aos dados originais, copie o `db.seed.json` por cima do `db.json`.
 | `/tarefas/:id/editar` | Edição de uma tarefa |
 | `/projetos` | Lista de projetos |
 | `/projetos/:id` | Página do projeto, com as tarefas dele |
-| `/busca` | Busca por título em tarefas e projetos (campo no topo da página) |
+| `/busca` | Busca por título em tarefas e projetos (campo no topo da página), com filtros de status e prioridade nas tarefas |
 | qualquer outra | Página não encontrada |
 
 ## API local
@@ -96,7 +96,7 @@ Prioridades aceitas: `baixa`, `media`, `alta`.
 ├── db.seed.json          # Cópia intacta dos dados iniciais
 ├── src/
 │   ├── api.ts            # Funções tipadas de acesso à API
-│   ├── filtros.ts        # Estado único da busca por título (tarefas e projetos)
+│   ├── filtros.ts        # Estado único da busca por título e dos filtros de status e prioridade
 │   ├── router.ts         # Rotas da aplicação
 │   ├── rotulos.ts        # Textos de status/prioridade e formatação de datas
 │   ├── tipos.ts          # Contrato de dados
@@ -104,6 +104,7 @@ Prioridades aceitas: `baixa`, `media`, `alta`.
 │   ├── components/
 │   │   ├── CartaoTarefa.vue   # Cartão de uma tarefa
 │   │   ├── CarregaDados.vue   # Estados de carregando, erro e não encontrado
+│   │   ├── FiltrosTarefas.vue # Seletores de status e prioridade das tarefas
 │   │   └── FormularioTarefa.vue # Formulário de tarefa, usado para criar e editar
 │   └── views/            # Telas ligadas às rotas
 └── package.json
