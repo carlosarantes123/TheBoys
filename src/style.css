@@ -1036,3 +1036,25 @@ h3 {
   align-items: center;
   gap: 16px;
 }
+
+.form-field input[aria-invalid='true'],
+.form-field textarea[aria-invalid='true'],
+.form-field select[aria-invalid='true'] {
+  border: 2px solid #c14d58;
+}
+
+.form-field small.field-error {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.acoes a {
+  text-decoration: none;
+}

@@ -6,6 +6,9 @@ import { formatarData } from '../rotulos'
 
 <template>
   <h1>Projetos</h1>
+  <p class="acoes">
+    <RouterLink class="primary-button" to="/projetos/novo">＋ Novo projeto</RouterLink>
+  </p>
   <CarregaDados :carregar="listarProjetos" v-slot="{ dados }">
     <p v-if="dados.length === 0">Nenhum projeto cadastrado.</p>
     <div class="grade">
