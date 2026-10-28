@@ -17,11 +17,12 @@ import { filtrarTarefas, filtros } from '../filtros'
       </div>
       <label class="search-box">
         <span>⌕</span>
-        <input v-model="filtros.busca" type="search" placeholder="Buscar tarefa..." aria-label="Buscar tarefas" />
+        <input v-model="filtros.busca" type="search" placeholder="Buscar por título..." aria-label="Buscar tarefas por título" />
       </label>
     </div>
 
     <p v-if="dados.length === 0">Nenhuma tarefa cadastrada.</p>
+    <p v-else-if="filtrarTarefas(dados).length === 0">Nenhuma tarefa encontrada para “{{ filtros.busca.trim() }}”.</p>
     <div class="grade">
       <CartaoTarefa v-for="tarefa in filtrarTarefas(dados)" :key="tarefa.id" :tarefa="tarefa" />
     </div>
