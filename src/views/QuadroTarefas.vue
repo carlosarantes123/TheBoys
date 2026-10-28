@@ -67,7 +67,7 @@ function contar(tarefas: Tarefa[], status: Status) {
       </div>
       <label class="search-box">
         <span>⌕</span>
-        <input v-model="filtros.busca" type="search" placeholder="Buscar tarefa..." aria-label="Buscar tarefas" />
+        <input v-model="filtros.busca" type="search" placeholder="Buscar por título..." aria-label="Buscar tarefas por título" />
       </label>
     </div>
 

@@ -52,6 +52,7 @@ Para voltar aos dados originais, copie o `db.seed.json` por cima do `db.json`.
 | `/tarefas/:id/editar` | Edição de uma tarefa |
 | `/projetos` | Lista de projetos |
 | `/projetos/:id` | Página do projeto, com as tarefas dele |
+| `/busca` | Busca por título em tarefas e projetos (campo no topo da página) |
 | qualquer outra | Página não encontrada |
 
 ## API local
@@ -95,6 +96,7 @@ Prioridades aceitas: `baixa`, `media`, `alta`.
 ├── db.seed.json          # Cópia intacta dos dados iniciais
 ├── src/
 │   ├── api.ts            # Funções tipadas de acesso à API
+│   ├── filtros.ts        # Estado único da busca por título (tarefas e projetos)
 │   ├── router.ts         # Rotas da aplicação
 │   ├── rotulos.ts        # Textos de status/prioridade e formatação de datas
 │   ├── tipos.ts          # Contrato de dados

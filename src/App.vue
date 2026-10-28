@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { filtros } from './filtros'
 
 const route = useRoute()
+const router = useRouter()
 const tituloPagina = computed(() => (route.meta.titulo as string | undefined) ?? 'TheBoys')
+
+// A busca da barra superior mostra tarefas e projetos juntos, na tela /busca.
+function irParaBusca() {
+  if (route.path !== '/busca') router.push('/busca')
+}
 </script>
 
 <template>
@@ -55,9 +62,22 @@ const tituloPagina = computed(() => (route.meta.titulo as string | undefined) ??
           <strong>{{ tituloPagina }}</strong>
         </div>
 
-        <RouterLink class="primary-button top-create" to="/tarefas/nova">
-          <span>＋</span> Nova tarefa
-        </RouterLink>
+        <div class="topbar-acoes">
+          <label class="search-box top-search">
+            <span>⌕</span>
+            <input
+              v-model="filtros.busca"
+              type="search"
+              placeholder="Buscar tarefas e projetos..."
+              aria-label="Buscar tarefas e projetos por título"
+              @input="irParaBusca"
+              @keydown.enter="irParaBusca"
+            />
+          </label>
+          <RouterLink class="primary-button top-create" to="/tarefas/nova">
+            <span>＋</span> Nova tarefa
+          </RouterLink>
+        </div>
       </header>
 
       <section class="page-content">

@@ -190,6 +190,18 @@ select:focus-visible {
   background: var(--surface);
 }
 
+.topbar-acoes {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.top-search {
+  width: min(100%, 300px);
+}
+
 .breadcrumb {
   display: flex;
   flex-wrap: wrap;
@@ -846,7 +858,17 @@ h1 {
 
   .topbar {
     min-height: 60px;
+    flex-wrap: wrap;
     padding: 11px 16px;
+  }
+
+  .topbar-acoes {
+    flex-basis: 100%;
+  }
+
+  .top-search {
+    width: auto;
+    flex: 1;
   }
 
   .breadcrumb {

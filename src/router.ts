@@ -8,6 +8,7 @@ import ListaProjetos from './views/ListaProjetos.vue'
 import PaginaProjeto from './views/PaginaProjeto.vue'
 import NovoProjeto from './views/NovoProjeto.vue'
 import EditarProjeto from './views/EditarProjeto.vue'
+import BuscaGeral from './views/BuscaGeral.vue'
 import NaoEncontrada from './views/NaoEncontrada.vue'
 
 export default createRouter({
@@ -22,6 +23,7 @@ export default createRouter({
     { path: '/projetos/novo', component: NovoProjeto, meta: { titulo: 'Novo projeto' } },
     { path: '/projetos/:id', component: PaginaProjeto, meta: { titulo: 'Projeto' } },
     { path: '/projetos/:id/editar', component: EditarProjeto, meta: { titulo: 'Editar projeto' } },
+    { path: '/busca', component: BuscaGeral, meta: { titulo: 'Busca' } },
     { path: '/:rota(.*)*', component: NaoEncontrada, meta: { titulo: 'Não encontrada' } },
   ],
 })
