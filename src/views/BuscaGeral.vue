@@ -4,6 +4,7 @@ import CarregaDados from '../components/CarregaDados.vue'
 import FiltrosTarefas from '../components/FiltrosTarefas.vue'
 import CartaoTarefa from '../components/CartaoTarefa.vue'
 import { filtrarProjetos, filtrarTarefas, filtros, temBusca, temFiltros } from '../filtros'
+import { substituirTarefa } from '../tarefas'
 import { formatarData } from '../rotulos'
 
 const carregar = async () => {
@@ -42,7 +43,12 @@ const carregar = async () => {
       <h2>Tarefas</h2>
       <p v-if="filtrarTarefas(tarefas).length === 0">Nenhuma tarefa encontrada<template v-if="temBusca()"> para “{{ filtros.busca.trim() }}”</template><template v-if="temFiltros()"> com os filtros escolhidos</template>.</p>
       <div class="grade">
-        <CartaoTarefa v-for="tarefa in filtrarTarefas(tarefas)" :key="tarefa.id" :tarefa="tarefa" />
+        <CartaoTarefa
+          v-for="tarefa in filtrarTarefas(tarefas)"
+          :key="tarefa.id"
+          :tarefa="tarefa"
+          @atualizada="substituirTarefa(tarefas, $event)"
+        />
       </div>
     </template>
   </CarregaDados>

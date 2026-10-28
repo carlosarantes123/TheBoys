@@ -4,6 +4,7 @@ import { formatarData, rotuloPrioridade, rotuloStatus } from '../rotulos'
 import SeletorStatus from './SeletorStatus.vue'
 
 defineProps<{ tarefa: Tarefa }>()
+const emit = defineEmits<{ atualizada: [tarefa: Tarefa] }>()
 </script>
 
 <template>
@@ -19,6 +20,6 @@ defineProps<{ tarefa: Tarefa }>()
     </p>
     <p>Responsável: {{ tarefa.responsavel }}</p>
     <p>Prazo: {{ formatarData(tarefa.prazo) }}</p>
-    <SeletorStatus :tarefa="tarefa" />
+    <SeletorStatus :tarefa="tarefa" @atualizada="emit('atualizada', $event)" />
   </article>
 </template>

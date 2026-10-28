@@ -5,6 +5,8 @@ import { rotuloStatus } from '../rotulos'
 import type { Status, Tarefa } from '../tipos'
 
 const props = defineProps<{ tarefa: Tarefa }>()
+// Avisa o dono da lista com a tarefa devolvida pela API; ele troca o objeto no array.
+const emit = defineEmits<{ atualizada: [tarefa: Tarefa] }>()
 
 const opcoes = Object.entries(rotuloStatus) as [Status, string][]
 const salvando = ref(false)
@@ -19,8 +21,7 @@ async function mudar(evento: Event) {
   erro.value = ''
   try {
     const salva = await atualizarStatusTarefa(props.tarefa.id, novo)
-    // Atualiza a tarefa que a tela já tem: no quadro, o cartão muda de coluna.
-    props.tarefa.status = salva.status
+    emit('atualizada', salva)
   } catch {
     erro.value = 'Não foi possível salvar o status. Tente de novo.'
     seletor.value = anterior
