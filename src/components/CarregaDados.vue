@@ -1,8 +1,14 @@
 <script setup lang="ts" generic="T">
 import { onMounted, ref } from 'vue'
 import { ErroNaoEncontrado } from '../api'
+import IndicadorCarregamento, { type FormatoCarregamento } from './IndicadorCarregamento.vue'
 
-const props = defineProps<{ carregar: () => Promise<T> }>()
+const props = defineProps<{
+  carregar: () => Promise<T>
+  // Texto e formato do indicador mostrado enquanto os dados não chegam.
+  mensagem?: string
+  formato?: FormatoCarregamento
+}>()
 
 const dados = ref<T | null>(null)
 const carregando = ref(true)
@@ -24,7 +30,7 @@ onMounted(executar)
 </script>
 
 <template>
-  <p v-if="carregando" role="status">Carregando…</p>
+  <IndicadorCarregamento v-if="carregando" :mensagem="mensagem" :formato="formato" />
   <p v-else-if="erro instanceof ErroNaoEncontrado" role="alert">Não encontrado.</p>
   <div v-else-if="erro" role="alert">
     <p>Não foi possível carregar os dados. A API está no ar?</p>

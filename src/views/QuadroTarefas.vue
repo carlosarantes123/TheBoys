@@ -49,7 +49,7 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
 
   <AlternarVisao />
 
-  <CarregaDados :carregar="carregar" v-slot="{ dados: { tarefas, projetos } }">
+  <CarregaDados :carregar="carregar" mensagem="Carregando o quadro…" formato="quadro" v-slot="{ dados: { tarefas, projetos } }">
     <div class="summary-grid">
       <article class="summary-card">
         <span class="summary-icon purple">▦</span>

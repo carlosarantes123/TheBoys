@@ -41,6 +41,12 @@ npm run dev
 
 Para voltar aos dados originais, copie o `db.seed.json` por cima do `db.json`.
 
+A API local responde rápido demais para ver o indicador de carregamento. Para simular uma rede lenta, defina um atraso em milissegundos ao iniciar a aplicação:
+
+```bash
+VITE_ATRASO_API=1500 npm run dev
+```
+
 ## Rotas da aplicação
 
 | Rota | Tela |
@@ -104,6 +110,7 @@ Prioridades aceitas: `baixa`, `media`, `alta`.
 │   ├── components/
 │   │   ├── CartaoTarefa.vue   # Cartão de uma tarefa
 │   │   ├── CarregaDados.vue   # Estados de carregando, erro e não encontrado
+│   │   ├── IndicadorCarregamento.vue # Aviso com spinner e esqueleto da tela enquanto os dados não chegam
 │   │   ├── FiltrosTarefas.vue # Seletores de status e prioridade das tarefas
 │   │   └── FormularioTarefa.vue # Formulário de tarefa, usado para criar e editar
 │   └── views/            # Telas ligadas às rotas

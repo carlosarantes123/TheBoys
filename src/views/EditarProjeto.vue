@@ -34,7 +34,7 @@ async function salvar(dados: NovoProjeto) {
     <p v-if="erro" class="notice error" role="alert">{{ erro }}</p>
   </div>
 
-  <CarregaDados :carregar="() => buscarProjeto(id)" v-slot="{ dados: projeto }">
+  <CarregaDados :carregar="() => buscarProjeto(id)" mensagem="Carregando projeto…" formato="formulario" v-slot="{ dados: projeto }">
     <FormularioProjeto
       :projeto="projeto"
       :enviando="salvando"

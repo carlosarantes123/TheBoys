@@ -2,9 +2,14 @@ import type { NovaTarefa, Projeto, Status, Tarefa } from './tipos'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
+// Atraso opcional (em ms) para ver o indicador de carregamento com a API local,
+// que responde rápido demais. Ex.: VITE_ATRASO_API=1500 npm run dev
+const ATRASO_MS = Number(import.meta.env.VITE_ATRASO_API ?? 0)
+
 export class ErroNaoEncontrado extends Error {}
 
 async function buscar<T>(caminho: string, opcoes?: RequestInit): Promise<T> {
+  if (ATRASO_MS > 0) await new Promise((resolver) => setTimeout(resolver, ATRASO_MS))
   const resposta = await fetch(`${BASE_URL}${caminho}`, opcoes)
   if (resposta.status === 404) throw new ErroNaoEncontrado(caminho)
   if (!resposta.ok) throw new Error(`Falha na API (${resposta.status})`)
