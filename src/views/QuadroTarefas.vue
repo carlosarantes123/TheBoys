@@ -1,11 +1,12 @@
+
 <script setup lang="ts">
-import { listarProjetos, listarTarefas } from '../api'
+import { excluirTarefa, listarProjetos, listarTarefas } from '../api'
 import AlternarVisao from '../components/AlternarVisao.vue'
 import CarregaDados from '../components/CarregaDados.vue'
 import FiltrosTarefas from '../components/FiltrosTarefas.vue'
 import SeletorStatus from '../components/SeletorStatus.vue'
 import { filtrarTarefas, filtros } from '../filtros'
-import { substituirTarefa } from '../tarefas'
+import { removerTarefa, substituirTarefa } from '../tarefas'
 import { formatarData, rotuloPrioridade, rotuloStatus } from '../rotulos'
 import type { Projeto, Status, Tarefa } from '../tipos'
 
@@ -22,6 +23,17 @@ function nomeProjeto(projetos: Projeto[], projetoId: string) {
 
 function contar(tarefas: Tarefa[], status: Status) {
   return tarefas.filter((tarefa) => tarefa.status === status).length
+}
+
+async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
+  if (!window.confirm('Tem certeza de que deseja excluir esta tarefa?')) return
+
+  try {
+    await excluirTarefa(tarefa.id)
+    removerTarefa(tarefas, tarefa.id)
+  } catch {
+    window.alert('Não foi possível excluir a tarefa. Tente novamente.')
+  }
 }
 </script>
 
@@ -94,14 +106,25 @@ function contar(tarefas: Tarefa[], status: Status) {
               <span class="project-name">{{ nomeProjeto(projetos, tarefa.projetoId) }}</span>
               <span class="task-id">#{{ tarefa.id }}</span>
             </div>
+
             <h4><RouterLink :to="`/tarefas/${tarefa.id}`">{{ tarefa.titulo }}</RouterLink></h4>
             <p v-if="tarefa.descricao" class="task-description">{{ tarefa.descricao }}</p>
+
             <div class="task-tags">
               <span class="priority-tag" :class="tarefa.prioridade">
                 {{ rotuloPrioridade[tarefa.prioridade] }}
               </span>
             </div>
+
             <SeletorStatus :tarefa="tarefa" @atualizada="substituirTarefa(tarefas, $event)" />
+
+            <button
+              type="button"
+              @click="excluir(tarefas, tarefa)"
+            >
+              Excluir tarefa
+            </button>
+
             <div class="task-card-footer">
               <span class="assignee-avatar">{{ tarefa.responsavel.slice(0, 1).toUpperCase() }}</span>
               <span class="assignee-name">{{ tarefa.responsavel }}</span>
