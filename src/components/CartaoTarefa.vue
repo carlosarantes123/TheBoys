@@ -56,6 +56,15 @@ async function excluir(id: string) {
       @atualizada="emit('atualizada', $event)"
     />
 
+    <RouterLink
+      class="secondary-button botao-editar"
+      :to="`/tarefas/${tarefa.id}/editar`"
+      :aria-label="`Editar tarefa ${tarefa.titulo}`"
+    >
+      <Icone nome="lapis" :tamanho="15" />
+      Editar tarefa
+    </RouterLink>
+
     <button
       type="button"
       class="secondary-button botao-excluir"

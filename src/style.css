@@ -1098,6 +1098,11 @@ h3 {
   text-decoration: none;
 }
 
+.botao-editar {
+  width: 100%;
+  margin-top: 8px;
+}
+
 .botao-excluir {
   width: 100%;
   margin-top: 8px;

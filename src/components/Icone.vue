@@ -11,6 +11,7 @@ export type NomeIcone =
   | 'relogio'
   | 'check'
   | 'lixeira'
+  | 'lapis'
   | 'raio'
 
 const caminhos: Record<NomeIcone, string[]> = {
@@ -24,6 +25,7 @@ const caminhos: Record<NomeIcone, string[]> = {
   relogio: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z', 'M12 7v5l3 2'],
   check: ['M5 12.5l4.5 4.5L19 7'],
   lixeira: ['M4 7h16', 'M10 11v6', 'M14 11v6', 'M6 7l1 13h10l1-13', 'M9 7V4h6v3'],
+  lapis: ['M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z', 'M14.5 5.5l3 3'],
   raio: ['M13 2 4 14h7l-1 8 9-12h-7z'],
 }
 
