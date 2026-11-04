@@ -13,7 +13,7 @@ import { filtrarTarefas, filtros, temBusca, temFiltros } from '../filtros'
   <h1>Tarefas</h1>
   <AlternarVisao />
 
-  <CarregaDados :carregar="listarTarefas" v-slot="{ dados }">
+  <CarregaDados :carregar="listarTarefas" mensagem="Carregando tarefas…" v-slot="{ dados }">
     <div class="board-toolbar">
       <div>
         <span class="task-total">{{ filtrarTarefas(dados).length }} tarefas</span>

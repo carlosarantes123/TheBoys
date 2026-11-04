@@ -16,7 +16,7 @@ const carregar = async () => {
 <template>
   <h1>Busca</h1>
 
-  <CarregaDados :carregar="carregar" v-slot="{ dados: { tarefas, projetos } }">
+  <CarregaDados :carregar="carregar" mensagem="Buscando tarefas e projetos…" v-slot="{ dados: { tarefas, projetos } }">
     <!-- O campo de busca é o da barra superior (App.vue), que traz até esta tela. -->
     <p v-if="!temBusca()">Digite um título no campo de busca, no topo, para buscar entre as tarefas e os projetos.</p>
     <template v-else>

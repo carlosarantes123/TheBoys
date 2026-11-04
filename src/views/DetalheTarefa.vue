@@ -9,7 +9,7 @@ const id = String(route.params.id)
 </script>
 
 <template>
-  <CarregaDados :carregar="() => buscarTarefa(id)" v-slot="{ dados: tarefa }">
+  <CarregaDados :carregar="() => buscarTarefa(id)" mensagem="Carregando tarefa…" formato="detalhe" v-slot="{ dados: tarefa }">
     <h1>{{ tarefa.titulo }}</h1>
     <dl class="detalhes">
       <dt>Descrição</dt>

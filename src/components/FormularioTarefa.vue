@@ -50,7 +50,7 @@ function enviar() {
 </script>
 
 <template>
-  <CarregaDados :carregar="listarProjetos" v-slot="{ dados: projetos }">
+  <CarregaDados :carregar="listarProjetos" mensagem="Carregando formulário…" formato="formulario" v-slot="{ dados: projetos }">
     <form ref="formulario" class="task-form" novalidate @submit.prevent="enviar">
       <div class="form-section-title">
         <span class="form-section-icon" aria-hidden="true">✎</span>

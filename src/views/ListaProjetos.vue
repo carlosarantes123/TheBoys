@@ -10,7 +10,7 @@ import { formatarData } from '../rotulos'
   <p class="acoes">
     <RouterLink class="primary-button" to="/projetos/novo">＋ Novo projeto</RouterLink>
   </p>
-  <CarregaDados :carregar="listarProjetos" v-slot="{ dados }">
+  <CarregaDados :carregar="listarProjetos" mensagem="Carregando projetos…" v-slot="{ dados }">
     <div class="board-toolbar">
       <div>
         <span class="task-total">{{ filtrarProjetos(dados).length }} projetos</span>

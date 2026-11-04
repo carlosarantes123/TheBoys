@@ -11,7 +11,7 @@ const id = String(route.params.id)
 </script>
 
 <template>
-  <CarregaDados :carregar="() => buscarProjetoComTarefas(id)" v-slot="{ dados: projeto }">
+  <CarregaDados :carregar="() => buscarProjetoComTarefas(id)" mensagem="Carregando projeto e tarefas…" formato="detalhe" v-slot="{ dados: projeto }">
     <h1>{{ projeto.nome }}</h1>
     <p>{{ projeto.descricao }}</p>
     <p>Disciplina: {{ projeto.disciplina }} · Criado em {{ formatarData(projeto.criadoEm) }}</p>

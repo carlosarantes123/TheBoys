@@ -41,6 +41,20 @@ npm run dev
 
 Para voltar aos dados originais, copie o `db.seed.json` por cima do `db.json`.
 
+A API local responde rápido demais para ver o indicador de carregamento. Para simular uma rede lenta, defina um atraso em milissegundos ao iniciar a aplicação:
+
+```bash
+VITE_ATRASO_API=1500 npm run dev
+```
+
+No PowerShell (Windows): `$env:VITE_ATRASO_API=1500; npm run dev`.
+
+Se a API falhar ao carregar uma tela, aparece um aviso explicando o problema e o botão **Tentar de novo**, que refaz a busca sem recarregar a página. Para ver o aviso, pare o json-server (Ctrl+C no terminal 1) e abra qualquer tela. Depois suba o json-server de novo e clique em **Tentar de novo**. O aviso distingue:
+
+- **Sem conexão com a API**: o servidor não respondeu (json-server parado ou endereço errado);
+- **A API está com problemas**: o servidor respondeu com erro 5xx;
+- qualquer outra falha, com uma mensagem genérica.
+
 ## Rotas da aplicação
 
 | Rota | Tela |
@@ -104,6 +118,8 @@ Prioridades aceitas: `baixa`, `media`, `alta`.
 │   ├── components/
 │   │   ├── CartaoTarefa.vue   # Cartão de uma tarefa
 │   │   ├── CarregaDados.vue   # Estados de carregando, erro e não encontrado
+│   │   ├── AvisoErroApi.vue   # Mensagem de falha da API com o botão "Tentar de novo"
+│   │   ├── IndicadorCarregamento.vue # Aviso com spinner e esqueleto da tela enquanto os dados não chegam
 │   │   ├── FiltrosTarefas.vue # Seletores de status e prioridade das tarefas
 │   │   └── FormularioTarefa.vue # Formulário de tarefa, usado para criar e editar
 │   └── views/            # Telas ligadas às rotas
