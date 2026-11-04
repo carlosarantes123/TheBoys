@@ -1,10 +1,11 @@
+
 <script setup lang="ts">
 import { listarTarefas } from '../api'
 import AlternarVisao from '../components/AlternarVisao.vue'
 import CarregaDados from '../components/CarregaDados.vue'
 import FiltrosTarefas from '../components/FiltrosTarefas.vue'
 import CartaoTarefa from '../components/CartaoTarefa.vue'
-import { substituirTarefa } from '../tarefas'
+import { removerTarefa, substituirTarefa } from '../tarefas'
 import { filtrarTarefas, filtros, temBusca, temFiltros } from '../filtros'
 </script>
 
@@ -28,12 +29,14 @@ import { filtrarTarefas, filtros, temBusca, temFiltros } from '../filtros'
 
     <p v-if="dados.length === 0">Nenhuma tarefa cadastrada.</p>
     <p v-else-if="filtrarTarefas(dados).length === 0">Nenhuma tarefa encontrada<template v-if="temBusca()"> para “{{ filtros.busca.trim() }}”</template><template v-if="temFiltros()"> com os filtros escolhidos</template>.</p>
+
     <div class="grade">
       <CartaoTarefa
         v-for="tarefa in filtrarTarefas(dados)"
         :key="tarefa.id"
         :tarefa="tarefa"
         @atualizada="substituirTarefa(dados, $event)"
+        @excluida="removerTarefa(dados, $event)"
       />
     </div>
   </CarregaDados>
