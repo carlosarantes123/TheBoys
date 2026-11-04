@@ -40,3 +40,12 @@ export const atualizarProjeto = (id: string, dados: NovoProjeto) =>
 // O filtro ?projetoId= não funciona no json-server para ids numéricos; usa-se _embed.
 export const buscarProjetoComTarefas = (id: string) =>
   buscar<ProjetoComTarefas>(`/projetos/${encodeURIComponent(id)}?_embed=tarefas`)
+export async function excluirTarefa(id: string): Promise<void> {
+  const resposta = await fetch(
+    `${BASE_URL}/tarefas/${encodeURIComponent(id)}`,
+    { method: 'DELETE' }
+  )
+
+  if (resposta.status === 404) throw new ErroNaoEncontrado(id)
+  if (!resposta.ok) throw new Error(`Falha na API (${resposta.status})`)
+}
