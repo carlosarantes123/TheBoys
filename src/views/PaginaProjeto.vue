@@ -3,7 +3,7 @@ import { useRoute } from 'vue-router'
 import { buscarProjetoComTarefas } from '../api'
 import CarregaDados from '../components/CarregaDados.vue'
 import CartaoTarefa from '../components/CartaoTarefa.vue'
-import { substituirTarefa } from '../tarefas'
+import { removerTarefa, substituirTarefa } from '../tarefas'
 import { formatarData } from '../rotulos'
 
 const route = useRoute()
@@ -31,6 +31,7 @@ const id = String(route.params.id)
         :key="tarefa.id"
         :tarefa="tarefa"
         @atualizada="substituirTarefa(projeto.tarefas, $event)"
+        @excluida="removerTarefa(projeto.tarefas, $event)"
       />
     </div>
     <p><RouterLink to="/projetos">← Voltar para os projetos</RouterLink></p>

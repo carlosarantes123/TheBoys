@@ -7,6 +7,7 @@ import FiltrosTarefas from '../components/FiltrosTarefas.vue'
 import SeletorStatus from '../components/SeletorStatus.vue'
 import { filtrarTarefas, filtros } from '../filtros'
 import { removerTarefa, substituirTarefa } from '../tarefas'
+import { ref } from 'vue'
 import { formatarData, rotuloPrioridade, rotuloStatus } from '../rotulos'
 import type { Projeto, Status, Tarefa } from '../tipos'
 
@@ -25,14 +26,17 @@ function contar(tarefas: Tarefa[], status: Status) {
   return tarefas.filter((tarefa) => tarefa.status === status).length
 }
 
-async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
-  if (!window.confirm('Tem certeza de que deseja excluir esta tarefa?')) return
+const erroExclusao = ref('')
 
+async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
+  if (!window.confirm(`Excluir a tarefa “${tarefa.titulo}”? Esta ação não pode ser desfeita.`)) return
+
+  erroExclusao.value = ''
   try {
     await excluirTarefa(tarefa.id)
     removerTarefa(tarefas, tarefa.id)
   } catch {
-    window.alert('Não foi possível excluir a tarefa. Tente novamente.')
+    erroExclusao.value = `Não foi possível excluir “${tarefa.titulo}”. A tarefa continua no quadro; tente novamente.`
   }
 }
 </script>
@@ -88,6 +92,8 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
       </div>
     </div>
 
+    <p v-if="erroExclusao" class="notice error" role="alert">{{ erroExclusao }}</p>
+
     <div class="kanban-board">
       <section v-for="[status, nome] in colunas" :key="status" class="kanban-column">
         <header class="column-header">
@@ -120,6 +126,8 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
 
             <button
               type="button"
+              class="secondary-button botao-excluir"
+              :aria-label="`Excluir tarefa ${tarefa.titulo}`"
               @click="excluir(tarefas, tarefa)"
             >
               Excluir tarefa

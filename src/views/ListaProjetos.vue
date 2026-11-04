@@ -23,6 +23,7 @@ import { formatarData } from '../rotulos'
 
     <p v-if="dados.length === 0">Nenhum projeto cadastrado.</p>
     <p v-else-if="filtrarProjetos(dados).length === 0">Nenhum projeto encontrado para “{{ filtros.busca.trim() }}”.</p>
+    <h2 class="sr-only">Lista de projetos</h2>
     <div class="grade">
       <article v-for="projeto in filtrarProjetos(dados)" :key="projeto.id" class="cartao">
         <h3><RouterLink :to="`/projetos/${projeto.id}`">{{ projeto.nome }}</RouterLink></h3>

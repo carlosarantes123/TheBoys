@@ -30,6 +30,7 @@ import { filtrarTarefas, filtros, temBusca, temFiltros } from '../filtros'
     <p v-if="dados.length === 0">Nenhuma tarefa cadastrada.</p>
     <p v-else-if="filtrarTarefas(dados).length === 0">Nenhuma tarefa encontrada<template v-if="temBusca()"> para “{{ filtros.busca.trim() }}”</template><template v-if="temFiltros()"> com os filtros escolhidos</template>.</p>
 
+    <h2 class="sr-only">Lista de tarefas</h2>
     <div class="grade">
       <CartaoTarefa
         v-for="tarefa in filtrarTarefas(dados)"

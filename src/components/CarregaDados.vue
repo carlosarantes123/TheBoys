@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { ErroNaoEncontrado } from '../api'
 import AvisoErroApi from './AvisoErroApi.vue'
+import AvisoNaoEncontrado from './AvisoNaoEncontrado.vue'
 import IndicadorCarregamento, { type FormatoCarregamento } from './IndicadorCarregamento.vue'
 
 const props = defineProps<{
@@ -40,7 +41,7 @@ onMounted(executar)
 
 <template>
   <IndicadorCarregamento v-if="carregando" :mensagem="mensagem" :formato="formato" />
-  <p v-else-if="erro instanceof ErroNaoEncontrado" role="alert">Não encontrado.</p>
+  <AvisoNaoEncontrado v-else-if="erro instanceof ErroNaoEncontrado" />
   <AvisoErroApi v-else-if="erro" :erro="erro" :tentativas="tentativas" @tentar-de-novo="tentarDeNovo" />
   <slot v-else-if="dados" :dados="dados as T" />
 </template>

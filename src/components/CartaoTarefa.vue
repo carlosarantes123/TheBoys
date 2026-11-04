@@ -5,7 +5,7 @@ import { formatarData, rotuloPrioridade, rotuloStatus } from '../rotulos'
 import { excluirTarefa } from '../api'
 import SeletorStatus from './SeletorStatus.vue'
 
-defineProps<{ tarefa: Tarefa }>()
+const props = defineProps<{ tarefa: Tarefa }>()
 
 const emit = defineEmits<{
   atualizada: [tarefa: Tarefa]
@@ -16,7 +16,7 @@ const excluindo = ref(false)
 const erro = ref('')
 
 async function excluir(id: string) {
-  if (!window.confirm('Tem certeza de que deseja excluir esta tarefa?')) return
+  if (!window.confirm(`Excluir a tarefa “${props.tarefa.titulo}”? Esta ação não pode ser desfeita.`)) return
 
   excluindo.value = true
   erro.value = ''
@@ -58,7 +58,9 @@ async function excluir(id: string) {
 
     <button
       type="button"
+      class="secondary-button botao-excluir"
       :disabled="excluindo"
+      :aria-label="`Excluir tarefa ${tarefa.titulo}`"
       @click="excluir(tarefa.id)"
     >
       {{ excluindo ? 'Excluindo...' : 'Excluir tarefa' }}

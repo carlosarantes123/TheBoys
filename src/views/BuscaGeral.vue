@@ -4,7 +4,7 @@ import CarregaDados from '../components/CarregaDados.vue'
 import FiltrosTarefas from '../components/FiltrosTarefas.vue'
 import CartaoTarefa from '../components/CartaoTarefa.vue'
 import { filtrarProjetos, filtrarTarefas, filtros, temBusca, temFiltros } from '../filtros'
-import { substituirTarefa } from '../tarefas'
+import { removerTarefa, substituirTarefa } from '../tarefas'
 import { formatarData } from '../rotulos'
 
 const carregar = async () => {
@@ -48,6 +48,7 @@ const carregar = async () => {
           :key="tarefa.id"
           :tarefa="tarefa"
           @atualizada="substituirTarefa(tarefas, $event)"
+          @excluida="removerTarefa(tarefas, $event)"
         />
       </div>
     </template>
