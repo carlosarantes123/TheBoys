@@ -8,11 +8,39 @@ const ATRASO_MS = Number(import.meta.env.VITE_ATRASO_API ?? 0)
 
 export class ErroNaoEncontrado extends Error {}
 
+// A API não respondeu (json-server parado, endereço errado, sem rede).
+export class ErroSemConexao extends Error {
+  constructor() {
+    super(`Sem conexão com a API em ${BASE_URL}`)
+  }
+}
+
+// A API respondeu, mas com um status de erro (ex.: 500).
+export class ErroApi extends Error {
+  readonly status: number
+
+  constructor(status: number) {
+    super(`Falha na API (${status})`)
+    this.status = status
+  }
+}
+
+// O fetch só rejeita quando não há resposta nenhuma; erros HTTP chegam como resposta.
+async function requisitar(caminho: string, opcoes?: RequestInit): Promise<Response> {
+  let resposta: Response
+  try {
+    resposta = await fetch(`${BASE_URL}${caminho}`, opcoes)
+  } catch {
+    throw new ErroSemConexao()
+  }
+  if (resposta.status === 404) throw new ErroNaoEncontrado(caminho)
+  if (!resposta.ok) throw new ErroApi(resposta.status)
+  return resposta
+}
+
 async function buscar<T>(caminho: string, opcoes?: RequestInit): Promise<T> {
   if (ATRASO_MS > 0) await new Promise((resolver) => setTimeout(resolver, ATRASO_MS))
-  const resposta = await fetch(`${BASE_URL}${caminho}`, opcoes)
-  if (resposta.status === 404) throw new ErroNaoEncontrado(caminho)
-  if (!resposta.ok) throw new Error(`Falha na API (${resposta.status})`)
+  const resposta = await requisitar(caminho, opcoes)
   return resposta.json() as Promise<T>
 }
 
@@ -46,11 +74,5 @@ export const atualizarProjeto = (id: string, dados: NovoProjeto) =>
 export const buscarProjetoComTarefas = (id: string) =>
   buscar<ProjetoComTarefas>(`/projetos/${encodeURIComponent(id)}?_embed=tarefas`)
 export async function excluirTarefa(id: string): Promise<void> {
-  const resposta = await fetch(
-    `${BASE_URL}/tarefas/${encodeURIComponent(id)}`,
-    { method: 'DELETE' }
-  )
-
-  if (resposta.status === 404) throw new ErroNaoEncontrado(id)
-  if (!resposta.ok) throw new Error(`Falha na API (${resposta.status})`)
+  await requisitar(`/tarefas/${encodeURIComponent(id)}`, { method: 'DELETE' })
 }
