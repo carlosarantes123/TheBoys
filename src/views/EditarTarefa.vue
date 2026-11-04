@@ -28,7 +28,7 @@ async function salvar(dados: NovaTarefa) {
 
 <template>
   <div class="form-heading">
-    <RouterLink class="back-button" :to="`/tarefas/${id}`">← Voltar para a tarefa</RouterLink>
+    <RouterLink class="back-button" :to="`/tarefas/${id}`">Voltar para a tarefa</RouterLink>
     <p class="eyebrow">GERENCIAMENTO DE ATIVIDADES</p>
     <h1>Editar tarefa</h1>
     <p class="page-description">Altere as informações e salve para atualizar a tarefa.</p>

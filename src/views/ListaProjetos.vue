@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { listarProjetos } from '../api'
 import CarregaDados from '../components/CarregaDados.vue'
+import Icone from '../components/Icone.vue'
 import { filtrarProjetos, filtros } from '../filtros'
 import { formatarData } from '../rotulos'
 </script>
@@ -8,7 +9,7 @@ import { formatarData } from '../rotulos'
 <template>
   <h1>Projetos</h1>
   <p class="acoes">
-    <RouterLink class="primary-button" to="/projetos/novo">＋ Novo projeto</RouterLink>
+    <RouterLink class="primary-button" to="/projetos/novo"><Icone nome="mais" :tamanho="16" /> Novo projeto</RouterLink>
   </p>
   <CarregaDados :carregar="listarProjetos" mensagem="Carregando projetos…" v-slot="{ dados }">
     <div class="board-toolbar">
@@ -16,12 +17,12 @@ import { formatarData } from '../rotulos'
         <span class="task-total">{{ filtrarProjetos(dados).length }} projetos</span>
       </div>
       <label class="search-box">
-        <span>⌕</span>
-        <input v-model="filtros.busca" type="search" placeholder="Buscar por título..." aria-label="Buscar projetos por título" />
+        <Icone nome="busca" :tamanho="18" />
+        <input v-model="filtros.busca" type="search" placeholder="Buscar por título" aria-label="Buscar projetos por título" />
       </label>
     </div>
 
-    <p v-if="dados.length === 0">Nenhum projeto cadastrado.</p>
+    <p v-if="dados.length === 0" class="vazio">Nenhum projeto cadastrado. Use “Novo projeto” para criar o primeiro.</p>
     <p v-else-if="filtrarProjetos(dados).length === 0">Nenhum projeto encontrado para “{{ filtros.busca.trim() }}”.</p>
     <h2 class="sr-only">Lista de projetos</h2>
     <div class="grade">

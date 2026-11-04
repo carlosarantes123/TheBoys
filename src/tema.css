@@ -1,0 +1,1397 @@
+/*
+  Dois universos para o mesmo quadro de tarefas.
+
+  Herói (claro): gibi de banca. Cores primárias, retícula de meio-tom, caixas de
+  legenda, balões de fala e botões em paralelogramo, como letreiro de velocidade.
+
+  Vilão (escuro): a mesma bandeira, corrompida. Noite índigo, carmim, ouro fosco
+  e um ciano de "composto V". Painéis de cantos cortados e títulos góticos.
+
+  Tudo é desenho original. Os dois temas passam no Lighthouse de acessibilidade;
+  o foco do teclado é sempre visível e o movimento respeita "reduzir movimento".
+*/
+
+/* ============ Valores de cada universo ============ */
+
+:root,
+:root[data-tema='heroi'] {
+  color-scheme: light;
+
+  --fundo: #d6e7ff;
+  --pontos: rgb(31 79 216 / 17%);
+  --superficie: #ffffff;
+  --superficie-2: #eef4ff;
+  --texto: #0b1b4d;
+  --muted: #33437a;
+  --tinta: #0b1b4d;
+  --borda: #0b1b4d;
+  --linha: #9db6e6;
+  --campo-borda: #0b1b4d;
+  --campo-fundo: #ffffff;
+  --primaria: #e5202e;
+  --primaria-hover: #b8101c;
+  --primaria-texto: #ffffff;
+  --destaque: #ffd21f;
+  --destaque-texto: #0b1b4d;
+  --marca-ativa: #ffd21f;
+  --marca-ativa-texto: #0b1b4d;
+  --ativo: #0b1b4d;
+  --ativo-texto: #ffffff;
+  --link: #1740b8;
+  --foco: #0b1b4d;
+  --erro: #c4111f;
+  --erro-fundo: #fff1f2;
+  --masthead: #1f4fd8;
+  --masthead-texto: #ffffff;
+  --masthead-borda: #ffd21f;
+  --esq-a: #c3d6f5;
+  --esq-b: #dfeaff;
+
+  --fonte-corpo: 'Kanit', 'Segoe UI', system-ui, sans-serif;
+  --fonte-titulo: 'Kanit', 'Arial Narrow', Impact, sans-serif;
+}
+
+:root[data-tema='vilao'] {
+  color-scheme: dark;
+
+  --fundo: #13102a;
+  --pontos: transparent;
+  --superficie: #1f1a45;
+  --superficie-2: #181438;
+  --texto: #f3ece1;
+  --muted: #c3bce3;
+  --tinta: #f3ece1;
+  --borda: #4a3fa0;
+  --linha: #3d3580;
+  --campo-borda: #8f85d6;
+  --campo-fundo: #120f2e;
+  --primaria: #e01e37;
+  --primaria-hover: #b3122b;
+  --primaria-texto: #ffffff;
+  --destaque: #d9a93a;
+  --destaque-texto: #1a1405;
+  --marca-ativa: #e01e37;
+  --marca-ativa-texto: #ffffff;
+  --ativo: #e01e37;
+  --ativo-texto: #ffffff;
+  --link: #6fe6ff;
+  --foco: #6fe6ff;
+  --erro: #ff8a98;
+  --erro-fundo: #2c1433;
+  --masthead: #0a0818;
+  --masthead-texto: #f3ece1;
+  --masthead-borda: #e01e37;
+  --esq-a: #2b2560;
+  --esq-b: #382f78;
+
+  --fonte-titulo: 'Pirata One', 'Georgia', serif;
+  --granulado: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+:root {
+  /* Variáveis que o style.css já usa */
+  --primary: var(--primaria);
+  --primary-hover: var(--primaria-hover);
+  --text: var(--texto);
+  --border: var(--linha);
+  --surface: var(--superficie);
+  --sidebar: var(--masthead);
+
+  font-family: var(--fonte-corpo);
+  color: var(--texto);
+
+  /* sem fundo no html: assim o do body vira o fundo da tela e as sombras de pontinhos aparecem */
+  background: none;
+}
+
+/* ============ Base ============ */
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--texto);
+  background-color: var(--fundo);
+  font-family: var(--fonte-corpo);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* retícula Ben-Day: os pontinhos de impressão dos gibis */
+:root[data-tema='heroi'] body {
+  background-image: radial-gradient(var(--pontos) 1.7px, transparent 2.1px);
+  background-size: 15px 15px;
+}
+
+/* luz carmim vindo de cima e grão de filme */
+:root[data-tema='vilao'] body {
+  background-image:
+    radial-gradient(ellipse 70% 40% at 50% -6%, rgb(224 30 55 / 24%), transparent 70%),
+    var(--granulado);
+}
+
+::selection {
+  color: var(--destaque-texto);
+  background: var(--destaque);
+}
+
+a {
+  color: var(--link);
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid var(--foco);
+  outline-offset: 3px;
+  box-shadow: none;
+}
+
+.masthead :where(a, button, input):focus-visible {
+  outline-color: var(--destaque);
+}
+
+:root[data-tema='vilao'] .masthead :where(a, button, input):focus-visible {
+  outline-color: var(--foco);
+}
+
+/* ============ Cabeçalho ============ */
+
+.app-shell {
+  display: block;
+  min-height: 100vh;
+}
+
+.masthead {
+  position: relative;
+  border-bottom: 6px solid var(--masthead-borda);
+  color: var(--masthead-texto);
+  background: var(--masthead);
+}
+
+:root[data-tema='heroi'] .masthead {
+  box-shadow: 0 6px 0 var(--primaria);
+}
+
+.masthead-linha {
+  display: flex;
+  max-width: 1500px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 28px;
+  margin: 0 auto;
+  padding: 14px 32px;
+}
+
+.marca {
+  color: inherit;
+  font-family: var(--fonte-titulo);
+  text-decoration: none;
+}
+
+:root[data-tema='heroi'] .marca {
+  font-size: 36px;
+  font-style: italic;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 3px 3px 0 var(--tinta);
+}
+
+:root[data-tema='vilao'] .marca {
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1;
+  text-shadow: 2px 2px 0 var(--primaria);
+}
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.menu .menu-item {
+  display: inline-flex;
+  width: auto;
+  margin: 0;
+  padding: 8px 16px;
+  border-radius: 2px;
+  color: inherit;
+  background: transparent;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.menu .menu-item:hover {
+  color: inherit;
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+
+.menu .menu-item.active,
+.menu .menu-item.active:hover {
+  color: var(--marca-ativa-texto);
+  background: var(--marca-ativa);
+  text-decoration: none;
+}
+
+.masthead-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 14px;
+  margin-left: auto;
+}
+
+.top-search {
+  width: 280px;
+  max-width: 100%;
+}
+
+/* ---- botão de tema ---- */
+
+.alternar-tema {
+  display: inline-flex;
+  overflow: hidden;
+  border: 3px solid currentcolor;
+  border-radius: 2px;
+}
+
+.alternar-tema button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 14px;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.alternar-tema button + button {
+  border-left: 3px solid currentcolor;
+}
+
+.alternar-tema button[aria-pressed='true'] {
+  color: var(--marca-ativa-texto);
+  background: var(--marca-ativa);
+}
+
+.alternar-tema button:focus-visible {
+  outline-offset: -6px;
+}
+
+/* ============ Página e títulos ============ */
+
+.page-content {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
+
+.page-heading {
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  display: none;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--texto);
+  font-family: var(--fonte-titulo);
+}
+
+:root[data-tema='heroi'] h1 {
+  margin: 0 0 12px;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 0.98;
+  text-shadow: 4px 4px 0 var(--destaque);
+  text-transform: uppercase;
+}
+
+:root[data-tema='vilao'] h1 {
+  margin: 0 0 12px;
+  font-size: clamp(54px, 8vw, 104px);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.95;
+  text-shadow: 3px 3px 0 var(--primaria);
+  text-transform: none;
+}
+
+:root[data-tema='heroi'] .page-content h2,
+:root[data-tema='heroi'] .board-toolbar h2 {
+  margin: 0 0 10px;
+  font-size: 30px;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+:root[data-tema='vilao'] .page-content h2,
+:root[data-tema='vilao'] .board-toolbar h2 {
+  margin: 0 0 10px;
+  font-size: 38px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.page-description {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.vazio {
+  max-width: 640px;
+  padding: 20px 22px;
+  border: 3px dashed var(--campo-borda);
+  color: var(--texto);
+  background: var(--superficie-2);
+  font-size: 17px;
+  font-weight: 500;
+}
+
+/* ============ Botões ============ */
+
+.primary-button,
+.secondary-button {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 26px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--fonte-corpo);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-decoration: none;
+  text-transform: none;
+  transition: none;
+}
+
+.primary-button::before,
+.secondary-button::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: '';
+}
+
+:root[data-tema='heroi'] .primary-button,
+:root[data-tema='heroi'] .secondary-button {
+  font-style: italic;
+}
+
+/* o botão do herói é um paralelogramo, como letreiro de velocidade */
+:root[data-tema='heroi'] .primary-button::before,
+:root[data-tema='heroi'] .secondary-button::before {
+  border: 3px solid var(--borda);
+  border-radius: 2px;
+  transform: skewX(-12deg);
+}
+
+/* o do vilão tem os cantos cortados */
+:root[data-tema='vilao'] .primary-button::before,
+:root[data-tema='vilao'] .secondary-button::before {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+.primary-button {
+  color: var(--primaria-texto);
+}
+
+.primary-button::before {
+  background: var(--primaria);
+}
+
+.primary-button:hover {
+  background: transparent;
+  transform: none;
+}
+
+.primary-button:hover::before {
+  background: var(--primaria-hover);
+}
+
+.primary-button:active,
+.secondary-button:active {
+  transform: translateY(2px);
+}
+
+.secondary-button {
+  color: var(--texto);
+}
+
+:root[data-tema='heroi'] .secondary-button::before {
+  background: var(--superficie);
+}
+
+:root[data-tema='vilao'] .secondary-button::before {
+  background: #2b2560;
+}
+
+.secondary-button:hover {
+  background: transparent;
+  transform: none;
+}
+
+:root[data-tema='heroi'] .secondary-button:hover::before {
+  background: var(--destaque);
+}
+
+:root[data-tema='vilao'] .secondary-button:hover::before {
+  background: var(--primaria);
+}
+
+:root[data-tema='vilao'] .secondary-button:hover {
+  color: #fff;
+}
+
+button:disabled {
+  opacity: 0.55;
+}
+
+.botao-excluir {
+  width: 100%;
+  margin-top: 10px;
+  border: 0;
+  color: var(--erro);
+  box-shadow: none;
+  font-size: 16px;
+}
+
+:root[data-tema='heroi'] .botao-excluir::before {
+  border-color: var(--erro);
+  background: #ffffff;
+}
+
+:root[data-tema='heroi'] .botao-excluir:hover:not(:disabled)::before {
+  background: var(--erro-fundo);
+}
+
+:root[data-tema='vilao'] .botao-excluir {
+  color: var(--texto);
+}
+
+.back-button {
+  display: inline-block;
+  margin: 0 0 26px;
+  color: var(--link);
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.acoes {
+  gap: 14px;
+}
+
+/* ============ Campos ============ */
+
+.search-box {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border: 3px solid var(--campo-borda);
+  border-radius: 2px;
+  color: var(--texto);
+  background: var(--campo-fundo);
+}
+
+.search-box input {
+  color: var(--texto);
+  font-size: 16px;
+}
+
+.search-box input::placeholder,
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+.task-total {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 3px solid var(--borda);
+  border-radius: 2px;
+  color: var(--destaque-texto);
+  background: var(--destaque);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.board-toolbar {
+  flex-wrap: wrap;
+  margin: 8px 0 26px;
+}
+
+.board-toolbar > div:last-child {
+  flex-wrap: wrap;
+}
+
+#app .alternar-visao {
+  margin-bottom: 28px;
+  padding: 0;
+  border: 3px solid var(--borda);
+  border-radius: 2px;
+  background: var(--superficie);
+}
+
+#app .alternar-visao a {
+  padding: 9px 22px;
+  border-radius: 0;
+  color: var(--texto);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+#app .alternar-visao a:hover {
+  color: var(--destaque-texto);
+  background: var(--destaque);
+}
+
+#app .alternar-visao a.ativa {
+  color: var(--ativo-texto);
+  background: var(--ativo);
+}
+
+#app .filtros-tarefas select,
+#app .seletor-status select {
+  border: 3px solid var(--campo-borda);
+  border-radius: 2px;
+  color: var(--texto);
+  background: var(--campo-fundo);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+#app .filtros-tarefas select {
+  min-height: 48px;
+}
+
+#app .seletor-status select {
+  min-height: 44px;
+}
+
+#app .filtros-tarefas .limpar {
+  color: var(--link);
+  font-size: 16px;
+  text-decoration: underline;
+}
+
+#app .seletor-status small {
+  color: var(--erro);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ============ Painéis: cartões, formulário e quadro ============ */
+
+.grade {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 38px 32px;
+  padding: 20px 16px 16px 0;
+}
+
+/* herói: borda grossa de tinta e sombra de pontinhos de meio-tom */
+:root[data-tema='heroi'] :is(.cartao, .task-card, .task-form, .summary-card) {
+  position: relative;
+  border: 3px solid var(--borda);
+  border-radius: 3px;
+  background: var(--superficie);
+  box-shadow: none;
+}
+
+:root[data-tema='heroi'] :is(.cartao, .task-card, .task-form, .summary-card)::after {
+  position: absolute;
+  inset: 12px -12px -12px 12px;
+  z-index: -1;
+  background: radial-gradient(var(--tinta) 1.9px, transparent 2.4px) 0 0 / 7px 7px;
+  content: '';
+}
+
+/* vilão: cantos cortados, borda de painel índigo e uma barra carmim */
+:root[data-tema='vilao'] :is(.cartao, .task-card, .task-form, .summary-card) {
+  --corte: 18px;
+
+  position: relative;
+  isolation: isolate;
+  border: 0;
+  border-radius: 0;
+  background: var(--borda);
+  box-shadow: none;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--corte)) 0,
+    100% var(--corte),
+    100% 100%,
+    var(--corte) 100%,
+    0 calc(100% - var(--corte))
+  );
+}
+
+:root[data-tema='vilao'] :is(.cartao, .task-card, .task-form, .summary-card)::before {
+  position: absolute;
+  inset: 2px;
+  z-index: -1;
+  background: var(--superficie);
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--corte)) 0,
+    100% var(--corte),
+    100% 100%,
+    var(--corte) 100%,
+    0 calc(100% - var(--corte))
+  );
+  content: '';
+}
+
+:root[data-tema='vilao'] :is(.cartao, .task-card, .summary-card)::after {
+  position: absolute;
+  top: var(--corte);
+  bottom: var(--corte);
+  left: 0;
+  width: 5px;
+  background: var(--primaria);
+  content: '';
+}
+
+.cartao {
+  padding: 30px 22px 20px;
+}
+
+.cartao h3 {
+  margin: 0 0 10px;
+  color: var(--texto);
+  font-family: var(--fonte-corpo);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.cartao h3 a {
+  color: inherit;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.cartao p {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+/* a etapa da tarefa é uma legenda, como as dos quadrinhos */
+.cartao .etiqueta {
+  position: absolute;
+  z-index: 1;
+  padding: 1px 12px;
+  color: var(--destaque-texto);
+  background: var(--destaque);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+:root[data-tema='heroi'] .cartao .etiqueta {
+  top: -17px;
+  left: 16px;
+  border: 3px solid var(--borda);
+  border-radius: 2px;
+  font-style: italic;
+  transform: rotate(-1.5deg);
+}
+
+:root[data-tema='vilao'] .cartao .etiqueta {
+  top: 0;
+  left: 0;
+  padding-right: 22px;
+  border: 0;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+}
+
+:root[data-tema='vilao'] .cartao-tarefa {
+  padding-top: 40px;
+}
+
+/* ---- prioridade ---- */
+
+.marca-prioridade {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+:root[data-tema='heroi'] .marca-prioridade {
+  border: 3px solid var(--borda);
+  border-radius: 999px;
+}
+
+:root[data-tema='heroi'] .prio-alta {
+  color: #fff;
+  background: var(--primaria);
+}
+
+:root[data-tema='heroi'] .prio-media {
+  color: var(--destaque-texto);
+  background: var(--destaque);
+}
+
+:root[data-tema='heroi'] .prio-baixa {
+  color: var(--texto);
+  background: #fff;
+}
+
+:root[data-tema='vilao'] .marca-prioridade {
+  padding-right: 20px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+
+:root[data-tema='vilao'] .prio-alta {
+  color: #fff;
+  background: var(--primaria);
+}
+
+:root[data-tema='vilao'] .prio-media {
+  color: var(--destaque-texto);
+  background: var(--destaque);
+}
+
+:root[data-tema='vilao'] .prio-baixa {
+  color: var(--texto);
+  background: #2b2560;
+}
+
+/* ---- tarefa concluída: título riscado ---- */
+
+.cartao:has(.status-concluida) h3 a {
+  text-decoration: line-through;
+  text-decoration-color: var(--primaria);
+  text-decoration-thickness: 4px;
+}
+
+/* ============ Resumo do quadro ============ */
+
+.summary-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  margin: 6px 0 40px;
+  padding-right: 14px;
+}
+
+.summary-card {
+  gap: 16px;
+  padding: 18px 22px;
+}
+
+.summary-icon,
+.summary-icon.purple,
+.summary-icon.blue,
+.summary-icon.green {
+  width: 52px;
+  height: 52px;
+  border-radius: 0;
+  color: var(--destaque);
+  background: var(--tinta);
+}
+
+:root[data-tema='vilao'] .summary-icon,
+:root[data-tema='vilao'] .summary-icon.purple,
+:root[data-tema='vilao'] .summary-icon.blue,
+:root[data-tema='vilao'] .summary-icon.green {
+  color: #fff;
+  background: var(--primaria);
+}
+
+.summary-card div span {
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.summary-card strong {
+  color: var(--texto);
+  font-family: var(--fonte-titulo);
+  font-size: 44px;
+  line-height: 1;
+}
+
+:root[data-tema='heroi'] .summary-card strong {
+  font-style: italic;
+  font-weight: 900;
+}
+
+/* na fonte gótica o 1 parece um I: os números ficam na fonte reta */
+:root[data-tema='vilao'] .summary-card strong {
+  font-family: var(--fonte-corpo);
+  font-weight: 800;
+}
+
+/* ============ Quadro por etapas ============ */
+
+.kanban-board {
+  grid-template-columns: repeat(4, minmax(250px, 1fr));
+  gap: 34px;
+  padding: 24px 20px 34px 0;
+}
+
+.kanban-column {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.column-header {
+  gap: 12px;
+  margin-bottom: 30px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid var(--borda);
+}
+
+.etapa {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  place-items: center;
+  font-family: var(--fonte-corpo);
+  font-size: 26px;
+  font-weight: 900;
+}
+
+:root[data-tema='heroi'] .etapa {
+  color: var(--destaque);
+  background: var(--tinta);
+  font-style: italic;
+  transform: skewX(-10deg);
+}
+
+:root[data-tema='vilao'] .etapa {
+  color: #fff;
+  background: var(--primaria);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+
+.column-header h3 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+:root[data-tema='heroi'] .column-header h3 {
+  font-family: var(--fonte-corpo);
+  font-style: italic;
+  font-weight: 800;
+  text-transform: none;
+}
+
+:root[data-tema='vilao'] .column-header h3 {
+  font-size: 32px;
+  font-weight: 400;
+}
+
+.column-count {
+  display: grid;
+  min-width: 32px;
+  height: 32px;
+  margin-left: auto;
+  padding: 0 8px;
+  place-items: center;
+  color: var(--destaque-texto);
+  background: var(--destaque);
+  font-family: var(--fonte-corpo);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+:root[data-tema='heroi'] .column-count {
+  border: 3px solid var(--borda);
+  border-radius: 999px;
+}
+
+.column-cards {
+  gap: 30px;
+}
+
+.task-card {
+  min-width: 0;
+  padding: 18px 18px 16px;
+  transition: none;
+}
+
+.task-card:hover {
+  box-shadow: none;
+  transform: none;
+}
+
+.task-card-top {
+  margin-bottom: 8px;
+}
+
+.project-name {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.task-id {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.task-card h4 {
+  margin: 0 0 10px;
+  color: var(--texto);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.task-card h4 a {
+  color: inherit;
+}
+
+/* a descrição é um balão no herói e uma citação no vilão */
+:root[data-tema='heroi'] .task-description {
+  margin: 4px 0 14px;
+  padding: 10px 12px;
+  border: 2px solid var(--borda);
+  border-radius: 14px 14px 14px 2px;
+  color: var(--texto);
+  background: var(--superficie-2);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+:root[data-tema='vilao'] .task-description {
+  margin: 4px 0 14px;
+  padding: 2px 0 2px 12px;
+  border-left: 4px solid var(--primaria);
+  color: var(--muted);
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.task-tags {
+  margin-bottom: 12px;
+}
+
+.task-card-footer {
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 2px dashed var(--linha);
+}
+
+.assignee-name {
+  color: var(--texto);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.task-deadline {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.empty-column {
+  padding: 22px 16px;
+  border: 2px dashed var(--linha);
+  color: var(--muted);
+  text-align: center;
+}
+
+.empty-column p {
+  margin: 0;
+  font-size: 16px;
+  font-style: italic;
+}
+
+/* ============ Formulários ============ */
+
+.form-heading {
+  max-width: 760px;
+  margin: 0 auto 28px;
+}
+
+.task-form {
+  max-width: 760px;
+  padding: 34px 30px 28px;
+}
+
+.form-section-icon {
+  display: none;
+}
+
+.form-section-title {
+  margin-bottom: 24px;
+}
+
+.form-section-title h2 {
+  margin: 0;
+  color: var(--texto);
+}
+
+:root[data-tema='heroi'] .form-section-title h2 {
+  font-family: var(--fonte-corpo);
+  font-size: 28px;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+:root[data-tema='vilao'] .form-section-title h2 {
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.form-section-title p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.form-field label {
+  color: var(--texto);
+  font-family: var(--fonte-corpo);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.form-field label span {
+  color: var(--erro);
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  min-height: 50px;
+  padding: 10px 14px;
+  border: 3px solid var(--campo-borda);
+  border-radius: 2px;
+  color: var(--texto);
+  background: var(--campo-fundo);
+  font-family: var(--fonte-corpo);
+  font-size: 17px;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  border-color: var(--campo-borda);
+  box-shadow: none;
+}
+
+:root[data-tema='heroi'] .form-field :is(input, textarea, select):focus {
+  background: #fff8d1;
+}
+
+.form-field input[aria-invalid='true'],
+.form-field textarea[aria-invalid='true'],
+.form-field select[aria-invalid='true'] {
+  border: 3px solid var(--erro);
+  background: var(--erro-fundo);
+}
+
+.form-field small,
+.form-field small.field-error {
+  color: var(--erro);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.form-actions {
+  border-top: 2px dashed var(--linha);
+}
+
+.notice {
+  padding: 14px 18px;
+  border-left: 8px solid currentcolor;
+  border-radius: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.notice.error {
+  color: var(--erro);
+  background: var(--erro-fundo);
+}
+
+.notice.success {
+  color: var(--texto);
+  background: var(--superficie-2);
+}
+
+/* ============ Detalhe da tarefa ============ */
+
+.detalhes {
+  max-width: 720px;
+  margin: 26px 0;
+  gap: 0 28px;
+}
+
+.detalhes dt,
+.detalhes dd {
+  margin: 0;
+  padding: 14px 0;
+  border-top: 3px solid var(--borda);
+}
+
+.detalhes dt {
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.detalhes dd {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ============ Carregando, erro e não encontrado ============ */
+
+#app .carregamento-aviso {
+  margin-bottom: 22px;
+  padding: 8px 16px;
+  border: 3px solid var(--borda);
+  border-radius: 2px;
+  color: var(--destaque-texto);
+  background: var(--destaque);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+#app .carregamento-spinner {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 0;
+  background: var(--primaria);
+  animation: girar 0.9s steps(4) infinite;
+}
+
+#app .esqueleto {
+  background: linear-gradient(90deg, var(--esq-a) 25%, var(--esq-b) 50%, var(--esq-a) 75%);
+  background-size: 200% 100%;
+}
+
+#app .erro-api,
+#app .nao-encontrado {
+  max-width: 660px;
+  padding: 22px 24px;
+  border: 3px solid var(--borda);
+  border-left: 10px solid var(--erro);
+  border-radius: 2px;
+  color: var(--texto);
+  background: var(--superficie);
+  box-shadow: none;
+}
+
+#app .nao-encontrado {
+  border-left-color: var(--borda);
+}
+
+#app .erro-api-icone {
+  border-radius: 2px;
+  color: #fff;
+  background: var(--primaria);
+}
+
+#app .erro-api .erro-api-titulo,
+#app .nao-encontrado .nao-encontrado-titulo {
+  margin: 0 0 8px;
+  color: var(--texto);
+  font-family: var(--fonte-titulo);
+  font-size: 28px;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-shadow: none;
+  text-transform: none;
+}
+
+:root[data-tema='heroi'] #app .erro-api .erro-api-titulo,
+:root[data-tema='heroi'] #app .nao-encontrado .nao-encontrado-titulo {
+  font-style: italic;
+  font-weight: 800;
+}
+
+:root[data-tema='vilao'] #app .nao-encontrado .nao-encontrado-titulo {
+  font-weight: 400;
+}
+
+#app .erro-api p,
+#app .nao-encontrado p {
+  color: var(--texto);
+  font-size: 17px;
+}
+
+.codigo-404 {
+  margin: 0 0 20px;
+  color: var(--primaria);
+  font-family: var(--fonte-titulo);
+  font-size: clamp(110px, 20vw, 230px);
+  line-height: 0.85;
+}
+
+:root[data-tema='heroi'] .codigo-404 {
+  font-style: italic;
+  font-weight: 900;
+  text-shadow: 6px 6px 0 var(--tinta);
+}
+
+:root[data-tema='vilao'] .codigo-404 {
+  font-weight: 400;
+  text-shadow: 5px 5px 0 #000;
+}
+
+/* ============ A troca de universo: um corte na tela ============ */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+  animation: corte-para-direita 0.85s cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+
+html[data-transicao='heroi']::view-transition-new(root) {
+  animation-name: corte-para-esquerda;
+}
+
+@keyframes corte-para-direita {
+  from {
+    clip-path: polygon(-40% 0, -40% 0, -60% 100%, -60% 100%);
+  }
+
+  to {
+    clip-path: polygon(-40% 0, 150% 0, 130% 100%, -60% 100%);
+  }
+}
+
+@keyframes corte-para-esquerda {
+  from {
+    clip-path: polygon(140% 0, 140% 0, 160% 100%, 160% 100%);
+  }
+
+  to {
+    clip-path: polygon(150% 0, -40% 0, -60% 100%, 130% 100%);
+  }
+}
+
+/* ============ Telas pequenas ============ */
+
+@media (max-width: 900px) {
+  .masthead-acoes {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .top-search {
+    flex: 1 1 220px;
+  }
+}
+
+@media (max-width: 700px) {
+  .page-content {
+    padding: 28px 18px 64px;
+  }
+
+  .masthead-linha {
+    padding: 12px 18px;
+  }
+
+  .kanban-board {
+    grid-template-columns: 1fr;
+    padding-right: 10px;
+  }
+
+  .grade {
+    grid-template-columns: 1fr;
+    padding-right: 10px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .task-form {
+    padding: 28px 18px 22px;
+  }
+}
+
+/* ============ Movimento reduzido ============ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+
+  #app .carregamento-spinner {
+    animation-duration: 2.4s !important;
+  }
+}

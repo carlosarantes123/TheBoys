@@ -28,7 +28,7 @@ async function salvar(dados: NovaTarefa) {
 
 <template>
   <div class="form-heading">
-    <button class="back-button" type="button" @click="router.back()">← Voltar</button>
+    <button class="back-button" type="button" @click="router.back()">Voltar</button>
     <p class="eyebrow">GERENCIAMENTO DE ATIVIDADES</p>
     <h1>Nova tarefa</h1>
     <p class="page-description">

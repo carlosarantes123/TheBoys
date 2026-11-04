@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import { listarTarefas } from '../api'
 import AlternarVisao from '../components/AlternarVisao.vue'
+import Icone from '../components/Icone.vue'
 import CarregaDados from '../components/CarregaDados.vue'
 import FiltrosTarefas from '../components/FiltrosTarefas.vue'
 import CartaoTarefa from '../components/CartaoTarefa.vue'
@@ -21,13 +22,13 @@ import { filtrarTarefas, filtros, temBusca, temFiltros } from '../filtros'
       <div>
         <FiltrosTarefas />
         <label class="search-box">
-          <span>⌕</span>
-          <input v-model="filtros.busca" type="search" placeholder="Buscar por título..." aria-label="Buscar tarefas por título" />
+          <Icone nome="busca" :tamanho="18" />
+          <input v-model="filtros.busca" type="search" placeholder="Buscar por título" aria-label="Buscar tarefas por título" />
         </label>
       </div>
     </div>
 
-    <p v-if="dados.length === 0">Nenhuma tarefa cadastrada.</p>
+    <p v-if="dados.length === 0" class="vazio">Nenhuma tarefa cadastrada. Use “Nova tarefa” para criar a primeira.</p>
     <p v-else-if="filtrarTarefas(dados).length === 0">Nenhuma tarefa encontrada<template v-if="temBusca()"> para “{{ filtros.busca.trim() }}”</template><template v-if="temFiltros()"> com os filtros escolhidos</template>.</p>
 
     <h2 class="sr-only">Lista de tarefas</h2>

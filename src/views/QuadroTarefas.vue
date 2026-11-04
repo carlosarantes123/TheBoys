@@ -1,14 +1,15 @@
-
 <script setup lang="ts">
+import { ref } from 'vue'
 import { excluirTarefa, listarProjetos, listarTarefas } from '../api'
 import AlternarVisao from '../components/AlternarVisao.vue'
 import CarregaDados from '../components/CarregaDados.vue'
 import FiltrosTarefas from '../components/FiltrosTarefas.vue'
+import Icone from '../components/Icone.vue'
+import MarcaPrioridade from '../components/MarcaPrioridade.vue'
 import SeletorStatus from '../components/SeletorStatus.vue'
 import { filtrarTarefas, filtros } from '../filtros'
+import { formatarData, rotuloStatus } from '../rotulos'
 import { removerTarefa, substituirTarefa } from '../tarefas'
-import { ref } from 'vue'
-import { formatarData, rotuloPrioridade, rotuloStatus } from '../rotulos'
 import type { Projeto, Status, Tarefa } from '../tipos'
 
 const colunas = Object.entries(rotuloStatus) as [Status, string][]
@@ -44,11 +45,9 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
 <template>
   <div class="page-heading">
     <div>
-      <p class="eyebrow">VISÃO GERAL</p>
-      <h1>Meu quadro</h1>
-      <p class="page-description">Organize as atividades e acompanhe o progresso da equipe.</p>
+      <h1>Quadro</h1>
+      <p class="page-description">Acompanhe cada tarefa da criação até a entrega.</p>
     </div>
-    <RouterLink class="primary-button" to="/tarefas/nova">＋ Criar tarefa</RouterLink>
   </div>
 
   <AlternarVisao />
@@ -56,21 +55,21 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
   <CarregaDados :carregar="carregar" mensagem="Carregando o quadro…" formato="quadro" v-slot="{ dados: { tarefas, projetos } }">
     <div class="summary-grid">
       <article class="summary-card">
-        <span class="summary-icon purple">▦</span>
+        <span class="summary-icon purple"><Icone nome="quadro" :tamanho="24" /></span>
         <div>
           <span>Total de tarefas</span>
           <strong>{{ tarefas.length }}</strong>
         </div>
       </article>
       <article class="summary-card">
-        <span class="summary-icon blue">◷</span>
+        <span class="summary-icon blue"><Icone nome="relogio" :tamanho="24" /></span>
         <div>
           <span>Em andamento</span>
           <strong>{{ contar(tarefas, 'em-andamento') }}</strong>
         </div>
       </article>
       <article class="summary-card">
-        <span class="summary-icon green">✓</span>
+        <span class="summary-icon green"><Icone nome="check" :tamanho="24" /></span>
         <div>
           <span>Concluídas</span>
           <strong>{{ contar(tarefas, 'concluida') }}</strong>
@@ -80,14 +79,14 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
 
     <div class="board-toolbar">
       <div>
-        <h2>Quadro de tarefas</h2>
+        <h2>Tarefas por etapa</h2>
         <span class="task-total">{{ filtrarTarefas(tarefas).length }} tarefas</span>
       </div>
       <div>
         <FiltrosTarefas />
         <label class="search-box">
-          <span>⌕</span>
-          <input v-model="filtros.busca" type="search" placeholder="Buscar por título..." aria-label="Buscar tarefas por título" />
+          <Icone nome="busca" :tamanho="18" />
+          <input v-model="filtros.busca" type="search" placeholder="Buscar por título" aria-label="Buscar tarefas por título" />
         </label>
       </div>
     </div>
@@ -95,9 +94,14 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
     <p v-if="erroExclusao" class="notice error" role="alert">{{ erroExclusao }}</p>
 
     <div class="kanban-board">
-      <section v-for="[status, nome] in colunas" :key="status" class="kanban-column">
+      <section
+        v-for="([status, nome], indice) in colunas"
+        :key="status"
+        class="kanban-column"
+        :class="`coluna-${status}`"
+      >
         <header class="column-header">
-          <span class="column-dot" :class="status"></span>
+          <span class="etapa" aria-hidden="true">{{ indice + 1 }}</span>
           <h3>{{ nome }}</h3>
           <span class="column-count">{{ contar(filtrarTarefas(tarefas), status) }}</span>
         </header>
@@ -117,9 +121,7 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
             <p v-if="tarefa.descricao" class="task-description">{{ tarefa.descricao }}</p>
 
             <div class="task-tags">
-              <span class="priority-tag" :class="tarefa.prioridade">
-                {{ rotuloPrioridade[tarefa.prioridade] }}
-              </span>
+              <MarcaPrioridade :prioridade="tarefa.prioridade" />
             </div>
 
             <SeletorStatus :tarefa="tarefa" @atualizada="substituirTarefa(tarefas, $event)" />
@@ -130,19 +132,18 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
               :aria-label="`Excluir tarefa ${tarefa.titulo}`"
               @click="excluir(tarefas, tarefa)"
             >
+              <Icone nome="lixeira" :tamanho="15" />
               Excluir tarefa
             </button>
 
             <div class="task-card-footer">
-              <span class="assignee-avatar">{{ tarefa.responsavel.slice(0, 1).toUpperCase() }}</span>
-              <span class="assignee-name">{{ tarefa.responsavel }}</span>
-              <span class="task-deadline">◷ {{ formatarData(tarefa.prazo) }}</span>
+              <span class="assignee-name"><span class="sr-only">Responsável: </span>{{ tarefa.responsavel }}</span>
+              <span class="task-deadline">Prazo {{ formatarData(tarefa.prazo) }}</span>
             </div>
           </article>
 
           <div v-if="contar(filtrarTarefas(tarefas), status) === 0" class="empty-column">
-            <span>◇</span>
-            <p>Nenhuma tarefa</p>
+            <p>Nenhuma tarefa nesta etapa.</p>
           </div>
         </div>
       </section>

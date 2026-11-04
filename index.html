@@ -1,10 +1,29 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>repo</title>
+    <meta name="theme-color" content="#1f4fd8" />
+    <title>TheBoys</title>
+    <!-- Aplica o tema salvo antes de pintar a tela, para não piscar no outro universo. -->
+    <script>
+      try {
+        var salvo = localStorage.getItem('theboys-tema')
+        if (salvo !== 'heroi' && salvo !== 'vilao') {
+          salvo = matchMedia('(prefers-color-scheme: dark)').matches ? 'vilao' : 'heroi'
+        }
+        document.documentElement.dataset.tema = salvo
+      } catch (e) {
+        document.documentElement.dataset.tema = 'heroi'
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=Pirata+One&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="app"></div>

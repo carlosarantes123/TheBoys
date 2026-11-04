@@ -24,7 +24,7 @@ async function salvar(dados: NovoProjeto) {
 
 <template>
   <div class="form-heading">
-    <RouterLink class="back-button" to="/projetos">← Voltar para os projetos</RouterLink>
+    <RouterLink class="back-button" to="/projetos">Voltar para os projetos</RouterLink>
     <p class="eyebrow">GERENCIAMENTO DE PROJETOS</p>
     <h1>Novo projeto</h1>
     <p class="page-description">Preencha as informações para cadastrar um projeto.</p>

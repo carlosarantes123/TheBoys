@@ -27,7 +27,7 @@ const id = String(route.params.id)
     </dl>
     <p class="acoes">
       <RouterLink class="primary-button" :to="`/tarefas/${tarefa.id}/editar`">✎ Editar tarefa</RouterLink>
-      <RouterLink to="/">← Voltar para as tarefas</RouterLink>
+      <RouterLink to="/">Voltar para as tarefas</RouterLink>
     </p>
   </CarregaDados>
 </template>

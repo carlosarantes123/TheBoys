@@ -16,10 +16,11 @@ Projeto em equipe da disciplina **Desenvolvimento Frontend — 2026.2**: uma apl
 - **Vue 3** com **TypeScript**, criado com o **Vite** (`npm create vite@latest`, template `vue-ts`)
 - **Vue Router** para as rotas
 - **json-server** como API local, a partir do `db.json`
+- **Google Fonts** (Kanit e Pirata One), carregadas pelo `index.html`: é o único recurso externo do projeto; sem internet, o navegador usa uma fonte parecida
 
 ## Como rodar o projeto
 
-Pré-requisito: **Node.js 24 ou superior** (`node -v`).
+Pré-requisito: **Node.js 22.12 ou superior** (`node -v`), o mínimo exigido pelo json-server e pelo Vite. Testado com o Node 22.20.
 
 ```bash
 git clone https://github.com/carlosarantes123/TheBoys.git
@@ -54,6 +55,14 @@ Se a API falhar ao carregar uma tela, aparece um aviso explicando o problema e o
 - **Sem conexão com a API**: o servidor não respondeu (json-server parado ou endereço errado);
 - **A API está com problemas**: o servidor respondeu com erro 5xx;
 - qualquer outra falha, com uma mensagem genérica.
+
+## Tema: Herói e Vilão
+
+O aplicativo tem dois temas: o claro é o **Herói** (estilo gibi, com retícula de meio-tom, legendas e botões em paralelogramo) e o escuro é o **Vilão** (noite índigo, painéis de cantos cortados e títulos góticos). O botão **Herói | Vilão** no topo troca o tema com um corte diagonal na tela.
+
+- Na primeira visita, o tema segue a preferência do sistema (claro = Herói, escuro = Vilão). A escolha fica salva no navegador (`localStorage`, chave `theboys-tema`).
+- Com "reduzir movimento" ligado no sistema, a troca é imediata, sem o corte.
+- O visual fica em `src/tema.css`, carregado depois do `src/style.css`, e a troca em `src/tema.ts`.
 
 ## Rotas da aplicação
 

@@ -4,7 +4,7 @@
 
 <template>
   <div class="nao-encontrado" role="alert">
-    <p class="nao-encontrado-titulo">Não encontrado</p>
+    <h1 class="nao-encontrado-titulo">Não encontrado</h1>
     <p>O item que você tentou abrir não existe ou foi excluído.</p>
     <p class="nao-encontrado-links">
       <RouterLink class="primary-button" to="/">Ver as tarefas</RouterLink>

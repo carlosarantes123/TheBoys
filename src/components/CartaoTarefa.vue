@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Tarefa } from '../tipos'
-import { formatarData, rotuloPrioridade, rotuloStatus } from '../rotulos'
+import { formatarData, rotuloStatus } from '../rotulos'
 import { excluirTarefa } from '../api'
+import Icone from './Icone.vue'
 import SeletorStatus from './SeletorStatus.vue'
+import MarcaPrioridade from './MarcaPrioridade.vue'
 
 const props = defineProps<{ tarefa: Tarefa }>()
 
@@ -33,7 +35,7 @@ async function excluir(id: string) {
 </script>
 
 <template>
-  <article class="cartao">
+  <article class="cartao cartao-tarefa">
     <h3>
       <RouterLink :to="`/tarefas/${tarefa.id}`">{{ tarefa.titulo }}</RouterLink>
     </h3>
@@ -43,9 +45,7 @@ async function excluir(id: string) {
         {{ rotuloStatus[tarefa.status] }}
       </span>
 
-      <span :class="['etiqueta', `prioridade-${tarefa.prioridade}`]">
-        Prioridade {{ rotuloPrioridade[tarefa.prioridade].toLowerCase() }}
-      </span>
+      <MarcaPrioridade :prioridade="tarefa.prioridade" />
     </p>
 
     <p>Responsável: {{ tarefa.responsavel }}</p>
@@ -63,6 +63,7 @@ async function excluir(id: string) {
       :aria-label="`Excluir tarefa ${tarefa.titulo}`"
       @click="excluir(tarefa.id)"
     >
+      <Icone nome="lixeira" :tamanho="15" />
       {{ excluindo ? 'Excluindo...' : 'Excluir tarefa' }}
     </button>
 
