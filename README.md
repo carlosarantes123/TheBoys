@@ -64,6 +64,16 @@ O aplicativo tem dois temas: o claro é o **Herói** (estilo gibi, com retícula
 - Com "reduzir movimento" ligado no sistema, a troca é imediata, sem o corte.
 - O visual fica em `src/tema.css`, carregado depois do `src/style.css`, e a troca em `src/tema.ts`.
 
+## Arrastar cartões no quadro (desafio opcional)
+
+No **Quadro**, arraste um cartão para outra etapa. No tema Herói, um herói voa atrás do cartão e o empurra; no tema Vilão, uma figura de sobretudo vai à frente e o puxa com tentáculos. O personagem troca de lado conforme a direção do arraste.
+
+- A gravação é pessimista: o cartão só pousa na coluna nova depois que a API confirma. Se a API falhar, ele volta e aparece um aviso.
+- **Esc** cancela o arraste. Soltar na mesma coluna não grava nada.
+- Funciona com mouse ou caneta, em telas a partir de 701 px. Em qualquer tela, o seletor de status do cartão faz a mesma mudança sem arrastar (teclado, leitor de tela e toque).
+- Com "reduzir movimento" ligado no sistema, o arraste funciona sem personagem e sem animação.
+- Os desenhos são SVGs gerados por `ferramentas/gerar_personagens.py` (precisa de Python 3; só para quem for mexer na arte): `python ferramentas/gerar_personagens.py`.
+
 ## Rotas da aplicação
 
 | Rota | Tela |

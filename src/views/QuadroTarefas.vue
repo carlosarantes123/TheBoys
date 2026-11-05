@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { excluirTarefa, listarProjetos, listarTarefas } from '../api'
+import { defineAsyncComponent, ref } from 'vue'
+import { atualizarStatusTarefa, excluirTarefa, listarProjetos, listarTarefas } from '../api'
+import { useArraste } from '../arraste'
 import AlternarVisao from '../components/AlternarVisao.vue'
 import CarregaDados from '../components/CarregaDados.vue'
 import FiltrosTarefas from '../components/FiltrosTarefas.vue'
@@ -29,6 +30,29 @@ function contar(tarefas: Tarefa[], status: Status) {
 
 const erroExclusao = ref('')
 
+// Os desenhos do arraste são pesados: só são baixados quando o quadro abre.
+const PalcoArraste = defineAsyncComponent(() => import('../components/arraste/PalcoArraste.vue'))
+
+// Arrastar o cartão para outra coluna (desafio opcional). O seletor de status
+// no cartão continua sendo a forma sem arraste de fazer a mesma coisa.
+const { estado: arraste, clone, iniciar: iniciarArraste } = useArraste()
+const erroMovimento = ref('')
+const anuncio = ref('')
+
+async function moverTarefa(tarefas: Tarefa[], id: string, status: Status) {
+  const tarefa = tarefas.find((t) => t.id === id)
+  erroMovimento.value = ''
+  try {
+    const salva = await atualizarStatusTarefa(id, status)
+    substituirTarefa(tarefas, salva)
+    anuncio.value = `Tarefa “${salva.titulo}” movida para ${rotuloStatus[status]}.`
+    return true
+  } catch {
+    erroMovimento.value = `Não foi possível mover “${tarefa?.titulo ?? 'a tarefa'}” para ${rotuloStatus[status]}. Ela voltou para a coluna de antes; tente novamente.`
+    return false
+  }
+}
+
 async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
   if (!window.confirm(`Excluir a tarefa “${tarefa.titulo}”? Esta ação não pode ser desfeita.`)) return
 
@@ -46,7 +70,7 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
   <div class="page-heading">
     <div>
       <h1>Quadro</h1>
-      <p class="page-description">Acompanhe cada tarefa da criação até a entrega.</p>
+      <p class="page-description">Acompanhe cada tarefa da criação até a entrega. Arraste um cartão para outra etapa ou use o seletor de status no próprio cartão.</p>
     </div>
   </div>
 
@@ -92,13 +116,15 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
     </div>
 
     <p v-if="erroExclusao" class="notice error" role="alert">{{ erroExclusao }}</p>
+    <p v-if="erroMovimento" class="notice error" role="alert">{{ erroMovimento }}</p>
 
-    <div class="kanban-board">
+    <div class="kanban-board" @pointerdown="iniciarArraste($event, (id, status) => moverTarefa(tarefas, id, status))">
       <section
         v-for="([status, nome], indice) in colunas"
         :key="status"
         class="kanban-column"
         :class="`coluna-${status}`"
+        :data-status="status"
       >
         <header class="column-header">
           <span class="etapa" aria-hidden="true">{{ indice + 1 }}</span>
@@ -111,8 +137,11 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
             v-for="tarefa in filtrarTarefas(tarefas).filter((t) => t.status === status)"
             :key="tarefa.id"
             class="task-card"
+            :data-tarefa-id="tarefa.id"
+            :data-titulo="tarefa.titulo"
           >
             <div class="task-card-top">
+              <span class="alca-arraste" aria-hidden="true"><Icone nome="alca" :tamanho="18" /></span>
               <span class="project-name">{{ nomeProjeto(projetos, tarefa.projetoId) }}</span>
               <span class="task-id">#{{ tarefa.id }}</span>
             </div>
@@ -158,4 +187,8 @@ async function excluir(tarefas: Tarefa[], tarefa: Tarefa) {
       </section>
     </div>
   </CarregaDados>
+
+  <!-- anúncio para leitores de tela quando um cartão muda de coluna -->
+  <p class="sr-only" role="status" aria-live="polite">{{ anuncio }}</p>
+  <PalcoArraste :estado="arraste" :clone="clone" />
 </template>

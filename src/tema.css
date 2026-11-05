@@ -1401,3 +1401,237 @@ html[data-transicao='heroi']::view-transition-new(root) {
     animation-duration: 2.4s !important;
   }
 }
+
+/* ============ Arrastar o cartão (desafio opcional) ============ */
+
+/* só com mouse ou caneta e em tela larga; no resto, o seletor de status faz o mesmo */
+.alca-arraste {
+  display: none;
+  margin-right: 2px;
+  color: var(--muted);
+}
+
+@media (min-width: 701px) and (pointer: fine) {
+  .kanban-board .task-card {
+    cursor: grab;
+  }
+
+  .alca-arraste {
+    display: inline-flex;
+  }
+}
+
+body.arrastando-cartao,
+body.arrastando-cartao * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+
+/* o lugar de onde o cartão saiu fica marcado, e o cartão de destino espera o pouso */
+.task-card.origem-arraste {
+  opacity: 0.3;
+}
+
+.task-card.chegando {
+  opacity: 0;
+}
+
+/* as colunas ocupam a altura toda do quadro: soltar abaixo do último cartão,
+   ou numa coluna vazia, também vale */
+.kanban-board {
+  align-items: stretch;
+}
+
+.kanban-board.com-arraste .kanban-column {
+  border-radius: 4px;
+  outline: 3px dashed transparent;
+  outline-offset: 10px;
+  transition: outline-color 0.15s, background-color 0.15s;
+}
+
+:root[data-tema='heroi'] .kanban-column.coluna-alvo {
+  outline-color: var(--borda);
+  background-color: rgb(255 210 31 / 28%);
+}
+
+:root[data-tema='vilao'] .kanban-column.coluna-alvo {
+  outline-color: var(--primaria);
+  background-color: rgb(224 30 55 / 12%);
+}
+
+/* palco: o cartão que voa e o personagem, por cima de tudo */
+.palco-arraste {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  pointer-events: none;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.6, 0, 0.25, 1);
+  will-change: transform;
+}
+
+.palco-arraste * {
+  pointer-events: none;
+}
+
+.suporte-cartao {
+  transition: transform 0.12s ease-out;
+}
+
+.palco-arraste .cartao-voando {
+  margin: 0;
+}
+
+.ator-heroi .suporte-cartao {
+  filter: drop-shadow(0 20px 22px rgb(11 27 77 / 28%));
+}
+
+.ator-vilao .suporte-cartao {
+  filter: drop-shadow(0 20px 26px rgb(0 0 0 / 60%));
+}
+
+.palco-arraste .ator {
+  position: absolute;
+  top: 40%;
+}
+
+.palco-arraste .ator svg {
+  display: block;
+  overflow: visible;
+}
+
+/* herói: sempre atrás do cartão, empurrando com as palmas */
+.ator-heroi.para-direita .ator {
+  right: calc(100% - 15px);
+  transform: translateY(-50%);
+}
+
+.ator-heroi.para-esquerda .ator {
+  left: calc(100% - 15px);
+  transform: translateY(-50%) scaleX(-1);
+}
+
+/* vilão: sempre à frente, puxando com os tentáculos enroscados na borda */
+.ator-vilao.para-direita .ator {
+  left: calc(100% - 30px);
+  transform: translateY(-50%);
+}
+
+.ator-vilao.para-esquerda .ator {
+  right: calc(100% - 30px);
+  transform: translateY(-50%) scaleX(-1);
+}
+
+.ator-heroi .ator svg {
+  animation: heroi-voa 0.5s ease-in-out infinite alternate;
+}
+
+.ator-vilao .ator svg {
+  animation: vilao-paira 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes heroi-voa {
+  from {
+    transform: translateY(-4px);
+  }
+
+  to {
+    transform: translateY(4px);
+  }
+}
+
+@keyframes vilao-paira {
+  from {
+    transform: translateY(-3px) rotate(-1deg);
+  }
+
+  to {
+    transform: translateY(3px) rotate(1deg);
+  }
+}
+
+/* enquanto a API responde: o personagem faz força e o cartão treme */
+.fase-gravando .suporte-cartao {
+  animation: forca 0.16s ease-in-out infinite alternate;
+}
+
+@keyframes forca {
+  from {
+    transform: translateX(-1.5px);
+  }
+
+  to {
+    transform: translateX(1.5px);
+  }
+}
+
+/* saída de cena: o herói decola; o vilão recolhe os tentáculos e vira fumaça */
+.fase-saindo.ator-heroi .ator svg {
+  animation: heroi-decola 0.55s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+}
+
+@keyframes heroi-decola {
+  to {
+    opacity: 0;
+    transform: translate(200px, -240px) rotate(-18deg) scale(0.5);
+  }
+}
+
+.fase-saindo.ator-vilao .ator svg {
+  animation: vilao-some 0.6s ease-in forwards;
+}
+
+.fase-saindo.ator-vilao .tentaculos {
+  animation: tentaculos-recolhem 0.32s ease-in forwards;
+  transform-origin: 238px 160px;
+}
+
+@keyframes vilao-some {
+  40% {
+    filter: blur(0);
+    opacity: 1;
+  }
+
+  to {
+    filter: blur(9px);
+    opacity: 0;
+    transform: translateY(14px) scale(0.92);
+  }
+}
+
+@keyframes tentaculos-recolhem {
+  to {
+    opacity: 0;
+    transform: scale(0.05);
+  }
+}
+
+/* pouso: no herói o cartão quica; no vilão ele acende por um instante */
+:root[data-tema='heroi'] .task-card.pousou {
+  animation: pouso-heroi 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes pouso-heroi {
+  from {
+    transform: scale(1.06, 0.94);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+:root[data-tema='vilao'] .task-card.pousou {
+  animation: pouso-vilao 0.6s ease-out;
+}
+
+@keyframes pouso-vilao {
+  from {
+    filter: brightness(1.7) saturate(1.4);
+  }
+
+  to {
+    filter: none;
+  }
+}

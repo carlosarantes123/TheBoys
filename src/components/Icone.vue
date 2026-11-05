@@ -13,6 +13,7 @@ export type NomeIcone =
   | 'lixeira'
   | 'lapis'
   | 'raio'
+  | 'alca'
 
 const caminhos: Record<NomeIcone, string[]> = {
   lista: ['M8 6h13', 'M8 12h13', 'M8 18h13', 'M3.5 6h.01', 'M3.5 12h.01', 'M3.5 18h.01'],
@@ -27,6 +28,7 @@ const caminhos: Record<NomeIcone, string[]> = {
   lixeira: ['M4 7h16', 'M10 11v6', 'M14 11v6', 'M6 7l1 13h10l1-13', 'M9 7V4h6v3'],
   lapis: ['M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z', 'M14.5 5.5l3 3'],
   raio: ['M13 2 4 14h7l-1 8 9-12h-7z'],
+  alca: ['M9 5.5h.01', 'M15 5.5h.01', 'M9 12h.01', 'M15 12h.01', 'M9 18.5h.01', 'M15 18.5h.01'],
 }
 
 withDefaults(defineProps<{ nome: NomeIcone; tamanho?: number; cheio?: boolean }>(), {
