@@ -4,7 +4,7 @@ Projeto em equipe da disciplina **Desenvolvimento Frontend — 2026.2**: uma apl
 
 ## Aplicação publicada
 
-- **Site:** _(link do Static Site no Render — a preencher)_
+- **Site:** <https://theboys-kl6z.onrender.com>
 - **API:** <https://theboys-api-d12x.onrender.com> (ex.: [`/tarefas`](https://theboys-api-d12x.onrender.com/tarefas))
 
 Os dois ficam no [Render](https://render.com), no plano gratuito:
