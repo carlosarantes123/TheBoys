@@ -1,6 +1,17 @@
 # TheBoys · Gerenciador de Tarefas Acadêmicas
 
-Projeto em equipe da disciplina **Desenvolvimento Frontend — 2026.2**: uma aplicação para organizar as tarefas dos projetos acadêmicos, com lista de tarefas, páginas de projeto e, nos próximos marcos, cadastro, edição, filtros e visão de quadro.
+Projeto em equipe da disciplina **Desenvolvimento Frontend — 2026.2**: uma aplicação para organizar as tarefas dos projetos acadêmicos, com lista de tarefas, páginas de projeto, cadastro, edição e exclusão, busca, filtros e visão de quadro.
+
+## Aplicação publicada
+
+- **Site:** _(link do Static Site no Render — a preencher)_
+- **API:** <https://theboys-api-d12x.onrender.com> (ex.: [`/tarefas`](https://theboys-api-d12x.onrender.com/tarefas))
+
+Os dois ficam no [Render](https://render.com), no plano gratuito:
+
+- A **API** é um *Web Service* que roda o mesmo `json-server` e o mesmo `db.json` do repositório (Build Command `npm ci`, Start Command `npm run api`). Ela dorme após uns 15 minutos sem uso, e o primeiro acesso depois disso leva cerca de 50 segundos: abra o site um pouco antes de apresentar. Quando o serviço reinicia ou é publicado de novo, os dados voltam ao `db.json` do GitHub.
+- O **site** é um *Static Site* (Build Command `npm ci && npm run build`, Publish Directory `dist`) com a regra de reescrita `/*` → `/index.html` (Rewrite), para que as rotas internas, como `/tarefas/2`, abram direto e no recarregar.
+- O endereço da API vem da variável `VITE_API_URL`: `.env.development` aponta para `http://localhost:3000` (`npm run dev`) e `.env.production` para a API no Render (`npm run build`).
 
 ## Equipe TheBoys
 
@@ -84,7 +95,9 @@ No **Quadro**, arraste um cartão para outra etapa. No tema Herói, um herói vo
 | `/tarefas/:id` | Detalhe de uma tarefa |
 | `/tarefas/:id/editar` | Edição de uma tarefa |
 | `/projetos` | Lista de projetos |
+| `/projetos/novo` | Cadastro de projeto |
 | `/projetos/:id` | Página do projeto, com as tarefas dele |
+| `/projetos/:id/editar` | Edição de um projeto |
 | `/busca` | Busca por título em tarefas e projetos (campo no topo da página), com filtros de status e prioridade nas tarefas |
 | qualquer outra | Página não encontrada |
 
@@ -98,8 +111,13 @@ O `json-server` transforma cada chave do `db.json` em uma rota:
 | `GET` | `/tarefas/:id` | Retorna uma tarefa |
 | `POST` | `/tarefas` | Cadastra uma tarefa |
 | `PUT` | `/tarefas/:id` | Atualiza uma tarefa |
+| `PATCH` | `/tarefas/:id` | Muda só o status de uma tarefa |
+| `DELETE` | `/tarefas/:id` | Exclui uma tarefa |
 | `GET` | `/projetos` | Lista os projetos |
+| `GET` | `/projetos/:id` | Retorna um projeto |
 | `GET` | `/projetos/:id?_embed=tarefas` | Retorna um projeto com as tarefas dele |
+| `POST` | `/projetos` | Cadastra um projeto |
+| `PUT` | `/projetos/:id` | Atualiza um projeto |
 
 > **Atenção:** `GET /tarefas?projetoId=1` volta vazio, porque o json-server lê o `1` da URL como número e no `db.json` o `projetoId` é o texto `"1"`. Para as tarefas de um projeto, use o `_embed`.
 
@@ -120,6 +138,7 @@ Prioridades aceitas: `baixa`, `media`, `alta`.
 | `npm run dev` | Inicia o servidor de desenvolvimento |
 | `npm run build` | Confere os tipos e gera a versão de produção em `dist/` |
 | `npm run preview` | Serve localmente a versão gerada pelo build |
+| `npm run api` | Sobe o json-server aceitando conexões externas (usado pelo Render; a porta vem de `PORT`, padrão 3000) |
 
 ## Estrutura do projeto
 
